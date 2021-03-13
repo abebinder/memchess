@@ -5,7 +5,7 @@ import Chessboard from "chessboardjsx";
 
 function App() {
   return (
-      <Chessboard/>
+      <Chessboard position="start"/>
   );
 }
 
