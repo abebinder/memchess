@@ -1,11 +1,13 @@
+import { Square } from "chess.js";
+
 export class Move{
-    private whiteSourceSquare: String;
-    private whiteTargetSquare: String;
-    private blackSourceSquare: String;
-    private blackTargetSquare: String;
+    public whiteSourceSquare: Square;
+    public whiteTargetSquare: Square;
+    public blackSourceSquare: Square;
+    public blackTargetSquare: Square;
 
 
-    constructor(whiteSourceSquare: String, whiteTargetSquare: String, blackSourceSquare: String, blackTargetSquare: String) {
+    constructor(whiteSourceSquare: Square, whiteTargetSquare: Square, blackSourceSquare: Square, blackTargetSquare: Square) {
         this.whiteSourceSquare = whiteSourceSquare;
         this.whiteTargetSquare = whiteTargetSquare;
         this.blackSourceSquare = blackSourceSquare;
