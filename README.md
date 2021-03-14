@@ -2,6 +2,13 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Setup
+Project contains [eco repo](https://github.com/niklasf/eco) (by @niklasf) as a submodule, run
+
+```git submodule init && git submodule update ```
+
+to populate the submodule.
+
 ## Available Scripts
 
 In the project directory, you can run:
