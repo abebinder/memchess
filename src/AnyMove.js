@@ -22,7 +22,7 @@ class HumanVsHuman extends Component {
 
     onDrop = ({sourceSquare, targetSquare}) => {
         // see if the move is legal
-
+        if(this.movecounter >= this.variation.length) return
         var matchVariation = this.variation[this.movecounter].sourceSquare === sourceSquare
             && this.variation[this.movecounter].targetSquare === targetSquare;
         console.log(matchVariation)
@@ -40,6 +40,8 @@ class HumanVsHuman extends Component {
             fen: this.game.fen(),
             history: this.game.history({verbose: true}),
         });
+
+        this.movecounter++;
 
     };
 
