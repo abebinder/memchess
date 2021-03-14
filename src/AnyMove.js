@@ -13,14 +13,6 @@ class HumanVsHuman extends Component {
 
     state = {
         fen: "start",
-        // square styles for active drop square
-        dropSquareStyle: {},
-        // custom square styles
-        squareStyles: {},
-        // square with the currently clicked piece
-        pieceSquare: "",
-        // currently clicked square
-        square: "",
         // array of past game moves
         history: []
     };
