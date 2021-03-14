@@ -43,7 +43,7 @@ class HumanVsHuman extends Component {
     };
 
     render() {
-        const { fen, dropSquareStyle, squareStyles } = this.state;
+        const { fen} = this.state;
 
         return this.props.children({
             position: fen,
@@ -58,18 +58,10 @@ export default function AnyMove() {
             <HumanVsHuman>
                 {({
                       position,
-                      onDrop,
-                      onMouseOverSquare,
-                      onMouseOutSquare,
-                      squareStyles,
-                      dropSquareStyle,
-                      onDragOverSquare,
-                      onSquareClick,
-                      onSquareRightClick
+                      onDrop
                   }) => (
                     <Chessboard
                         id="humanVsHuman"
-                        width={320}
                         position={position}
                         onDrop={onDrop}
                     />
