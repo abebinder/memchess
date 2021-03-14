@@ -36,10 +36,12 @@ class HumanVsHuman extends Component {
 
         // illegal move
         if (move === null) return;
-        this.setState(({history, pieceSquare}) => ({
+        this.setState(() => ({
             fen: this.game.fen(),
             history: this.game.history({verbose: true}),
         }));
+
+        this.movecounter +=1;
     };
 
     render() {
