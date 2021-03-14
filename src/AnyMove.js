@@ -9,6 +9,8 @@ class HumanVsHuman extends Component {
 
     componentDidMount() {
         this.game = new Chess();
+        this.variation = [{sourceSquare: "e2", targetSquare: "e4"}];
+        this.movecounter=0
     }
 
     state = {
@@ -20,6 +22,12 @@ class HumanVsHuman extends Component {
 
     onDrop = ({sourceSquare, targetSquare}) => {
         // see if the move is legal
+
+        var matchVariation = this.variation[this.movecounter].sourceSquare === sourceSquare
+            && this.variation[this.movecounter].targetSquare === targetSquare;
+        console.log(matchVariation)
+        if(!matchVariation) return
+
         let move = this.game.move({
             from: sourceSquare,
             to: targetSquare,
