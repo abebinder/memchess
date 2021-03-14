@@ -36,18 +36,20 @@ class HumanVsHuman extends Component {
     };
 
 
-    onDrop = (movement: ShortMove) => {
+    onDrop = ({sourceSquare, targetSquare} : {sourceSquare:any, targetSquare:any})=> {
         // see if the move is legal
         if(this.movecounter >= this.variation.length) return
         const expectedVariationMove = this.variation[this.movecounter];
-        var matchVariation = expectedVariationMove.whiteSourceSquare === movement.from
-            && expectedVariationMove.whiteTargetSquare === movement.to;
+        console.log(expectedVariationMove.whiteSourceSquare);
+        console.log(sourceSquare)
+        var matchVariation = expectedVariationMove.whiteSourceSquare === sourceSquare
+            && expectedVariationMove.whiteTargetSquare === targetSquare
         console.log(matchVariation)
         if(!matchVariation) return
 
         let move = this.game.move({
-            from: movement.from,
-            to: movement.to,
+            from: sourceSquare,
+            to: targetSquare,
             promotion: "q" // always promote to a queen for example simplicity
         });
 
@@ -72,6 +74,7 @@ class HumanVsHuman extends Component {
     render() {
         const { fen} = this.state;
 
+        // @ts-ignore
         return this.props.children({
             position: fen,
             onDrop: this.onDrop,
