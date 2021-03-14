@@ -23,8 +23,9 @@ class HumanVsHuman extends Component {
     onDrop = ({sourceSquare, targetSquare}) => {
         // see if the move is legal
         if(this.movecounter >= this.variation.length) return
-        var matchVariation = this.variation[this.movecounter].whiteSourceSquare === sourceSquare
-            && this.variation[this.movecounter].whiteTargetSquare === targetSquare;
+        const expectedVariationMove = this.variation[this.movecounter];
+        var matchVariation = expectedVariationMove.whiteSourceSquare === sourceSquare
+            && expectedVariationMove.whiteTargetSquare === targetSquare;
         console.log(matchVariation)
         if(!matchVariation) return
 
@@ -36,6 +37,13 @@ class HumanVsHuman extends Component {
 
         // illegal move
         if (move === null) return;
+
+        let response = this.game.move({
+            from: expectedVariationMove.blackSourceSquare,
+            to: expectedVariationMove.blackTargetSquare,
+            promotion: "q" // always promote to a queen for example simplicity
+        });
+
         this.setState({
             fen: this.game.fen(),
             history: this.game.history({verbose: true}),
