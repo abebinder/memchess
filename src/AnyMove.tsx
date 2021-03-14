@@ -6,10 +6,6 @@ import {ShortMove, Square} from "chess.js";
 const Chess = typeof ChessJS === "function" ? ChessJS : ChessJS.Chess;
 
 
-interface AnyMoveProps {
-    children: React.ReactNode
-}
-
 class HumanVsHuman extends Component {
 
     movecounter: number;
@@ -17,18 +13,13 @@ class HumanVsHuman extends Component {
     game: any;
 
 
-    constructor(props: AnyMoveProps) {
+    constructor(props: any) {
         super(props);
         this.game = new Chess();
-        this.variation = [new Move("e2", "e4", "e7", "e5")];
+        this.variation = [new Move("e2", "e4", "e7", "e5"), new Move("g1","f3","b8","c6")];
         this.movecounter=0
     }
 
-    componentDidMount() {
-        this.game = new Chess();
-        this.variation = [new Move("e2", "e4", "e7", "e5")];
-        this.movecounter=0
-    }
     state = {
         fen: "start",
         // array of past game moves
@@ -36,7 +27,7 @@ class HumanVsHuman extends Component {
     };
 
 
-    onDrop = ({sourceSquare, targetSquare} : {sourceSquare:any, targetSquare:any})=> {
+    onDrop = ({sourceSquare, targetSquare} : {sourceSquare:Square, targetSquare:Square})=> {
         // see if the move is legal
         if(this.movecounter >= this.variation.length) return
         const expectedVariationMove = this.variation[this.movecounter];
