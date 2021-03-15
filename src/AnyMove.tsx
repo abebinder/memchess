@@ -22,7 +22,7 @@ class HumanVsHuman extends Component {
         this.movecounter=0
         this.ecoLoader = new EcoLoader();
         this.variation_Map = this.ecoLoader.load();
-        this.variation = this.variation_Map.get("Amar Gambit") as ShortMove[];
+        this.variation = this.variation_Map.get("Sicilian Defense: Najdorf Variation") as ShortMove[];
     }
 
     state = {
@@ -33,7 +33,7 @@ class HumanVsHuman extends Component {
 
 
     onDrop = ({sourceSquare, targetSquare} : {sourceSquare:Square, targetSquare:Square})=> {
-        this.variation = this.variation_Map.get("Amar Gambit") as ShortMove[];
+        this.variation = this.variation_Map.get("Sicilian Defense: Najdorf Variation") as ShortMove[];
         if(!this.playerMove(sourceSquare, targetSquare)) return
         this.makeExpectedVariationMove();
     };

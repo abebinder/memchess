@@ -4,13 +4,16 @@ import * as d3 from "d3";
 import { DSVRowArray, DSVRowString } from "d3";
 export class EcoLoader{
 
+    prefixes: string[] = ['a', 'b', 'c', 'd', 'e']
+
     public  load() : Map<string, ShortMove[]>{
-        console.log("Loading tsv")
         const openingNameToShortMoveMap = new Map<string, ShortMove[]>();
-        d3.tsv("data/eco/a.tsv").then((data: DSVRowArray<string>)=> {
-            for (const elem of data){
-                openingNameToShortMoveMap.set(elem["name"] as string, this.createShortMoves(elem))
-            }});
+        for (const prefix of this.prefixes) {
+            d3.tsv(`data/eco/${prefix}.tsv`).then((data: DSVRowArray<string>)=> {
+                for (const elem of data){
+                    openingNameToShortMoveMap.set(elem["name"] as string, this.createShortMoves(elem))
+                }});
+        }
         console.log(openingNameToShortMoveMap)
         return openingNameToShortMoveMap;
     }
