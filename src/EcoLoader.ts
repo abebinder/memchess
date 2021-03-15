@@ -10,7 +10,7 @@ export class EcoLoader{
 
         console.log("Loading tsv")
         // @ts-ignore
-        const derp = d3.tsv("a.tsv", function(data){
+        const derp = d3.tsv("data/eco/a.tsv", function(data){
             console.log(data)
         });
         return new Map<string, ShortMove>();
