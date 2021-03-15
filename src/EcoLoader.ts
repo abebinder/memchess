@@ -6,15 +6,14 @@ export class EcoLoader{
 
     prefixes: string[] = ['a', 'b', 'c', 'd', 'e']
 
-    public  load() : Map<string, ShortMove[]>{
+    public async load() {
         const openingNameToShortMoveMap = new Map<string, ShortMove[]>();
         for (const prefix of this.prefixes) {
-            d3.tsv(`data/eco/${prefix}.tsv`).then((data: DSVRowArray<string>)=> {
-                for (const elem of data){
-                    openingNameToShortMoveMap.set(elem["name"] as string, this.createShortMoves(elem))
-                }});
+            const data = await d3.tsv(`data/eco/${prefix}.tsv`);
+            for (const elem of data) {
+                openingNameToShortMoveMap.set(elem["name"] as string, this.createShortMoves(elem));
+            }
         }
-        console.log(openingNameToShortMoveMap)
         return openingNameToShortMoveMap;
     }
 

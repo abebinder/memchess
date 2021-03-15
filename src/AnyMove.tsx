@@ -1,6 +1,5 @@
 import React, {Component, Props} from "react";
 import Chessboard from "chessboardjsx";
-import {Move} from './Move'
 import * as ChessJS from "chess.js"
 import {ShortMove, Square, ChessInstance} from "chess.js";
 import { EcoLoader } from "./EcoLoader";
@@ -12,8 +11,9 @@ class HumanVsHuman extends Component {
     movecounter: number;
     game: ChessInstance;
     ecoLoader: EcoLoader;
-    variation_Map: Map<string, ShortMove[]>
+    variationMap: Map<string, ShortMove[]>
     variation: ShortMove[];
+    orientation: string;
 
 
     constructor() {
@@ -21,9 +21,11 @@ class HumanVsHuman extends Component {
         this.game = new Chess();
         this.movecounter=0
         this.ecoLoader = new EcoLoader();
-        this.variation_Map = this.ecoLoader.load();
+        //placehoder
+        this.variationMap = new Map<string, []>()
         //placeholder
         this.variation = [];
+        this.orientation="black";
     }
 
     state = {
@@ -32,9 +34,14 @@ class HumanVsHuman extends Component {
         history: []
     };
 
+    async componentDidMount(){
+        this.variationMap = await this.ecoLoader.load();
+        this.variation = this.variationMap.get("Sicilian Defense: Najdorf Variation") as ShortMove[];
+        if(this.orientation === 'black') this.makeExpectedVariationMove()
+    }
 
     onDrop = ({sourceSquare, targetSquare} : {sourceSquare:Square, targetSquare:Square})=> {
-        this.variation = this.variation_Map.get("Sicilian Defense: Najdorf Variation") as ShortMove[];
+        this.variation = this.variationMap.get("Sicilian Defense: Najdorf Variation") as ShortMove[];
         if(!this.playerMove(sourceSquare, targetSquare)) return
         this.makeExpectedVariationMove();
     };
@@ -71,6 +78,7 @@ class HumanVsHuman extends Component {
         return this.props.children({
             position: fen,
             onDrop: this.onDrop,
+            orientation: this.orientation
         });
     }
 }
@@ -81,12 +89,14 @@ export default function AnyMove() {
             <HumanVsHuman>
                 {({
                       position,
-                      onDrop
-                  }: {position: any, onDrop: any}) => (
+                      onDrop,
+                      orientation
+                  }: {position: any, onDrop: any, orientation: any}) => (
                     <Chessboard
                         id="humanVsHuman"
                         position={position}
                         onDrop={onDrop}
+                        orientation = {orientation}
                     />
                 )}
             </HumanVsHuman>
