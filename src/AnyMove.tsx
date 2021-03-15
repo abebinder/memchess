@@ -3,6 +3,7 @@ import Chessboard from "chessboardjsx";
 import {Move} from './Move'
 import * as ChessJS from "chess.js"
 import {ShortMove, Square} from "chess.js";
+import { EcoLoader } from "./EcoLoader";
 const Chess = typeof ChessJS === "function" ? ChessJS : ChessJS.Chess;
 
 
@@ -11,6 +12,7 @@ class HumanVsHuman extends Component {
     movecounter: number;
     variation: Move[];
     game: any;
+    ecoLoader: EcoLoader;
 
 
     constructor(props: any) {
@@ -18,6 +20,8 @@ class HumanVsHuman extends Component {
         this.game = new Chess();
         this.variation = [new Move("e2", "e4", "e7", "e5"), new Move("g1","f3","b8","c6")];
         this.movecounter=0
+        this.ecoLoader = new EcoLoader();
+        this.ecoLoader.load("")
     }
 
     state = {
