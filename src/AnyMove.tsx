@@ -10,18 +10,27 @@ const Chess = typeof ChessJS === "function" ? ChessJS : ChessJS.Chess;
 class HumanVsHuman extends Component {
 
     movecounter: number;
-    variation: Move[];
+    variation: any;
     game: any;
     ecoLoader: EcoLoader;
+    variation_Map: any
 
 
     constructor(props: any) {
         super(props);
         this.game = new Chess();
-        this.variation = [new Move("e2", "e4", "e7", "e5"), new Move("g1","f3","b8","c6")];
         this.movecounter=0
         this.ecoLoader = new EcoLoader();
-        this.ecoLoader.load("")
+        this.variation_Map = this.ecoLoader.load();
+        console.log("Variation map is")
+        console.log(this.variation_Map)
+        console.log("keys")
+        console.log(this.variation_Map.keys())
+        console.log("variation map get");
+        console.log(this.variation_Map.get("Amar Gambit"))
+        this.variation = this.variation_Map.get("Amar Gambit");
+        console.log("Variation is")
+        console.log(this.variation)
     }
 
     state = {
@@ -32,13 +41,16 @@ class HumanVsHuman extends Component {
 
 
     onDrop = ({sourceSquare, targetSquare} : {sourceSquare:Square, targetSquare:Square})=> {
+        this.variation = this.variation_Map.get("Amar Gambit");
         // see if the move is legal
+        console.log("Variation is (ondrop)")
+        console.log(this.variation)
         if(this.movecounter >= this.variation.length) return
-        const expectedVariationMove = this.variation[this.movecounter];
-        console.log(expectedVariationMove.whiteSourceSquare);
+        var expectedVariationMove = this.variation[this.movecounter];
+        console.log(expectedVariationMove.from);
         console.log(sourceSquare)
-        var matchVariation = expectedVariationMove.whiteSourceSquare === sourceSquare
-            && expectedVariationMove.whiteTargetSquare === targetSquare
+        var matchVariation = expectedVariationMove.from === sourceSquare
+            && expectedVariationMove.to === targetSquare
         console.log(matchVariation)
         if(!matchVariation) return
 
@@ -51,9 +63,14 @@ class HumanVsHuman extends Component {
         // illegal move
         if (move === null) return;
 
+        this.movecounter++;
+        if(this.movecounter >= this.variation.length) return;
+        expectedVariationMove = this.variation[this.movecounter];
+
+
         let response = this.game.move({
-            from: expectedVariationMove.blackSourceSquare,
-            to: expectedVariationMove.blackTargetSquare,
+            from: expectedVariationMove.from,
+            to: expectedVariationMove.to,
             promotion: "q" // always promote to a queen for example simplicity
         });
 
