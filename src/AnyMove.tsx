@@ -22,7 +22,8 @@ class HumanVsHuman extends Component {
         this.movecounter=0
         this.ecoLoader = new EcoLoader();
         this.variation_Map = this.ecoLoader.load();
-        this.variation = this.variation_Map.get("Sicilian Defense: Najdorf Variation") as ShortMove[];
+        //placeholder
+        this.variation = [];
     }
 
     state = {
