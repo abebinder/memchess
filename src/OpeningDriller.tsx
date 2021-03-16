@@ -9,25 +9,11 @@ const Chess = typeof ChessJS === "function" ? ChessJS : ChessJS.Chess;
 
 class OpeningDriller extends Component {
 
-    movecounter: number;
-    game: ChessInstance;
-    ecoLoader: EcoLoader;
+    game: ChessInstance = new Chess();
+    ecoLoader: EcoLoader = new EcoLoader();
+    orientation: string= "white";
     variationMap: Map<string, ShortMove[]>
     variation: ShortMove[];
-    orientation: string;
-
-
-    constructor() {
-        super({});
-        this.game = new Chess();
-        this.movecounter=0
-        this.ecoLoader = new EcoLoader();
-        //placehoder
-        this.variationMap = new Map<string, []>()
-        //placeholder
-        this.variation = [];
-        this.orientation="white";
-    }
 
     state = {
         fen: "start",
@@ -40,21 +26,21 @@ class OpeningDriller extends Component {
         this.variation = this.variationMap.get("Sicilian Defense: Najdorf Variation") as ShortMove[];
         if(this.orientation === 'white') return
         Mover.move({
-            move: this.variation[this.movecounter],
+            move: this.variation[this.state.history.length],
             game: this.game})
         this.incrementState()
     }
 
     onDrop = ({sourceSquare, targetSquare} : {sourceSquare:Square, targetSquare:Square})=> {
         const playermove = Mover.move({
-            move: this.variation[this.movecounter],
+            move: this.variation[this.state.history.length],
             game: this.game,
             expectedSourceSquare: sourceSquare,
             expectedTargetSquare: targetSquare})
         if (!playermove) return
         this.incrementState()
         const response = Mover.move({
-            move: this.variation[this.movecounter],
+            move: this.variation[this.state.history.length],
             game: this.game
         })
         if(!response) return
@@ -66,7 +52,6 @@ class OpeningDriller extends Component {
             fen: this.game.fen(),
             history: this.game.history({verbose: true}),
         });
-        this.movecounter++;
     }
 
     render() {
