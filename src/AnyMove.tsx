@@ -3,6 +3,7 @@ import Chessboard from "chessboardjsx";
 import * as ChessJS from "chess.js"
 import {ShortMove, Square, ChessInstance} from "chess.js";
 import { EcoLoader } from "./EcoLoader";
+import * as Mover from "./Mover"
 const Chess = typeof ChessJS === "function" ? ChessJS : ChessJS.Chess;
 
 
@@ -37,37 +38,35 @@ class HumanVsHuman extends Component {
     async componentDidMount(){
         this.variationMap = await this.ecoLoader.load();
         this.variation = this.variationMap.get("Sicilian Defense: Najdorf Variation") as ShortMove[];
-        if(this.orientation === 'black') this.makeExpectedVariationMove()
+        if(this.orientation === 'white') return
+        const move = Mover.move({
+            move: this.variation[this.movecounter],
+            game: this.game})
+        this.incrementState()
     }
 
     onDrop = ({sourceSquare, targetSquare} : {sourceSquare:Square, targetSquare:Square})=> {
-        if(!this.playerMove(sourceSquare, targetSquare)) return
-        this.makeExpectedVariationMove();
+        const playermove = Mover.move({
+            move: this.variation[this.movecounter],
+            game: this.game,
+            expectedSourceSquare: sourceSquare,
+            expectedTargetSquare: targetSquare})
+        if (!playermove) return
+        this.incrementState()
+        const response = Mover.move({
+            move: this.variation[this.movecounter],
+            game: this.game
+        })
+        if(!response) return
+        this.incrementState();
     };
 
-    playerMove(sourceSquare: Square, targetSquare: Square): boolean{
-        if(this.movecounter >= this.variation.length) return false;
-        var expectedVariationMove = this.variation[this.movecounter];
-        var matchVariation = expectedVariationMove.from === sourceSquare
-            && expectedVariationMove.to === targetSquare
-        if(!matchVariation) return false;
-        return this.makeExpectedVariationMove();
-    }
-
-    makeExpectedVariationMove(): boolean{
-        if(this.movecounter >= this.variation.length) return false;
-        var expectedVariationMove = this.variation[this.movecounter];
-        let move = this.game.move({
-            from: expectedVariationMove.from,
-            to: expectedVariationMove.to,
-            promotion: "q" // always promote to a queen for example simplicity
-        });
+    incrementState(){
         this.setState({
             fen: this.game.fen(),
             history: this.game.history({verbose: true}),
         });
         this.movecounter++;
-        return true;
     }
 
     render() {
