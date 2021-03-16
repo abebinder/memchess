@@ -7,7 +7,7 @@ import * as Mover from "./Mover"
 const Chess = typeof ChessJS === "function" ? ChessJS : ChessJS.Chess;
 
 
-class HumanVsHuman extends Component {
+class OpeningDriller extends Component {
 
     movecounter: number;
     game: ChessInstance;
@@ -81,10 +81,10 @@ class HumanVsHuman extends Component {
     }
 }
 
-export default function AnyMove() {
+export default function Driller() {
     return (
         <div>
-            <HumanVsHuman>
+            <OpeningDriller>
                 {({
                       position,
                       onDrop,
@@ -97,7 +97,7 @@ export default function AnyMove() {
                         orientation = {orientation}
                     />
                 )}
-            </HumanVsHuman>
+            </OpeningDriller>
         </div>
     );
 }
