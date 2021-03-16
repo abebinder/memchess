@@ -7,7 +7,7 @@ import * as Mover from "./Mover"
 const Chess = typeof ChessJS === "function" ? ChessJS : ChessJS.Chess;
 
 
-class OpeningDriller extends Component {
+class OpeningDriller extends Component<{children:any}> {
 
     game: ChessInstance = new Chess();
     ecoLoader: EcoLoader = new EcoLoader();
@@ -55,8 +55,6 @@ class OpeningDriller extends Component {
 
     render() {
         const { fen} = this.state;
-
-        // @ts-ignore
         return this.props.children({
             position: fen,
             onDrop: this.onDrop,
