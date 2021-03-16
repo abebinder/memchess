@@ -39,7 +39,7 @@ class OpeningDriller extends Component {
         this.variationMap = await this.ecoLoader.load();
         this.variation = this.variationMap.get("Sicilian Defense: Najdorf Variation") as ShortMove[];
         if(this.orientation === 'white') return
-        const move = Mover.move({
+        Mover.move({
             move: this.variation[this.movecounter],
             game: this.game})
         this.incrementState()
