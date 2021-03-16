@@ -25,7 +25,7 @@ class HumanVsHuman extends Component {
         this.variationMap = new Map<string, []>()
         //placeholder
         this.variation = [];
-        this.orientation="black";
+        this.orientation="white";
     }
 
     state = {
@@ -41,7 +41,6 @@ class HumanVsHuman extends Component {
     }
 
     onDrop = ({sourceSquare, targetSquare} : {sourceSquare:Square, targetSquare:Square})=> {
-        this.variation = this.variationMap.get("Sicilian Defense: Najdorf Variation") as ShortMove[];
         if(!this.playerMove(sourceSquare, targetSquare)) return
         this.makeExpectedVariationMove();
     };
