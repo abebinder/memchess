@@ -17,7 +17,6 @@ class OpeningDriller extends Component {
 
     state = {
         fen: "start",
-        // array of past game moves
         history: []
     };
 
@@ -28,7 +27,7 @@ class OpeningDriller extends Component {
         Mover.move({
             move: this.variation[this.state.history.length],
             game: this.game})
-        this.incrementState()
+        this.updateState()
     }
 
     onDrop = ({sourceSquare, targetSquare} : {sourceSquare:Square, targetSquare:Square})=> {
@@ -38,16 +37,16 @@ class OpeningDriller extends Component {
             expectedSourceSquare: sourceSquare,
             expectedTargetSquare: targetSquare})
         if (!playermove) return
-        this.incrementState()
+        this.updateState()
         const response = Mover.move({
             move: this.variation[this.state.history.length],
             game: this.game
         })
         if(!response) return
-        this.incrementState();
+        this.updateState();
     };
 
-    incrementState(){
+    updateState(){
         this.setState({
             fen: this.game.fen(),
             history: this.game.history({verbose: true}),
