@@ -4,30 +4,38 @@ import * as ChessJS from "chess.js"
 import {ShortMove, Square, ChessInstance} from "chess.js";
 import { EcoLoader } from "./EcoLoader";
 import * as Mover from "./Mover"
+import  VirtualizedList from './VirtualizedList'
 const Chess = typeof ChessJS === "function" ? ChessJS : ChessJS.Chess;
 
-
-class OpeningDriller extends Component<{children:any}> {
+class OpeningDriller extends Component{
 
     game: ChessInstance = new Chess();
     ecoLoader: EcoLoader = new EcoLoader();
-    orientation: string= "white";
+    orientation: "white" | "black" = "white";
     variationMap: Map<string, ShortMove[]>
     variation: ShortMove[];
 
     state = {
         fen: "start",
-        history: []
+        history: [],
+        loading: true
     };
 
-    async componentDidMount(){
-        this.variationMap = await this.ecoLoader.load();
-        this.variation = this.variationMap.get("Sicilian Defense: Najdorf Variation") as ShortMove[];
-        if(this.orientation === 'white') return
-        Mover.move({
-            move: this.variation[this.state.history.length],
-            game: this.game})
-        this.updateState()
+    componentDidMount(){
+        this.ecoLoader.load().then((data) => {
+            this.variationMap = data
+            this.variation = data.get("Sicilian Defense: Najdorf Variation") as ShortMove[];
+            this.setState({
+                fen: "start",
+                history: [],
+                loading: false
+            });
+            if(this.orientation === 'white') return
+            Mover.move({
+                move: this.variation[this.state.history.length],
+                game: this.game})
+            this.updateState()
+        });
     }
 
     onDrop = ({sourceSquare, targetSquare} : {sourceSquare:Square, targetSquare:Square})=> {
@@ -50,36 +58,27 @@ class OpeningDriller extends Component<{children:any}> {
         this.setState({
             fen: this.game.fen(),
             history: this.game.history({verbose: true}),
+            loading: false
         });
     }
 
     render() {
-        const { fen} = this.state;
-        return this.props.children({
-            position: fen,
-            onDrop: this.onDrop,
-            orientation: this.orientation
-        });
+
+        if(this.state.loading) return <h2>Loading...</h2>;
+        return (
+            <div>
+            <Chessboard
+                id="humanVsHuman"
+                position= {this.state.fen}
+                onDrop={this.onDrop}
+                orientation = {this.orientation}
+            />
+            <VirtualizedList
+            listy={Array.from(this.variationMap.keys())}
+            />
+            </div>
+        )
     }
 }
 
-export default function Driller() {
-    return (
-        <div>
-            <OpeningDriller>
-                {({
-                      position,
-                      onDrop,
-                      orientation
-                  }: {position: any, onDrop: any, orientation: any}) => (
-                    <Chessboard
-                        id="humanVsHuman"
-                        position={position}
-                        onDrop={onDrop}
-                        orientation = {orientation}
-                    />
-                )}
-            </OpeningDriller>
-        </div>
-    );
-}
+export default OpeningDriller
