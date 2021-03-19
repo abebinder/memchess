@@ -14,7 +14,8 @@ export class EcoLoader{
                 openingNameToShortMoveMap.set(elem["name"] as string, this.createShortMoves(elem));
             }
         }
-        return openingNameToShortMoveMap;
+        var mapAsc = new Map([...openingNameToShortMoveMap.entries()].sort());
+        return mapAsc;
     }
 
     createShortMoves(data: DSVRowString): ShortMove[] {

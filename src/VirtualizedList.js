@@ -6,22 +6,26 @@ import { FixedSizeList } from 'react-window';
 
 class VirtualizedList extends React.Component {
 
+    constructor (props){
+        super(props);
+        this.openings = []
+        this.renderRow = this.renderRow.bind(this);
+    }
+
     renderRow(props) {
-        console.log("props of  row is");
-        console.log(props)
         const {index, style} = props;
         return (
             <ListItem button style={style} key={index}>
-                <ListItemText primary={`Item ${index + 1}`}/>
+                <ListItemText primary={`${this.openings[index]}`}/>
             </ListItem>
         );
     }
 
     render() {
-        console.log("props is");
-        console.log(this.props);
+        if(this.openings.length === 0)  this.openings = this.props.openings
         return (
-            <FixedSizeList height={400} width={300} itemSize={46} itemCount={200}>
+            //TODO variable size list https://web.dev/virtualize-long-lists-react-window/
+            <FixedSizeList height={600} width={300} itemSize={100} itemCount={this.openings.length}>
                 {this.renderRow}
             </FixedSizeList>
         )

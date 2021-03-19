@@ -5,6 +5,7 @@ import {ShortMove, Square, ChessInstance} from "chess.js";
 import { EcoLoader } from "./EcoLoader";
 import * as Mover from "./Mover"
 import  VirtualizedList from './VirtualizedList'
+import './OpeningDriller.css'
 const Chess = typeof ChessJS === "function" ? ChessJS : ChessJS.Chess;
 
 class OpeningDriller extends Component{
@@ -66,7 +67,7 @@ class OpeningDriller extends Component{
 
         if(this.state.loading) return <h2>Loading...</h2>;
         return (
-            <div>
+            <div className='sideBySide'>
             <Chessboard
                 id="humanVsHuman"
                 position= {this.state.fen}
@@ -74,7 +75,7 @@ class OpeningDriller extends Component{
                 orientation = {this.orientation}
             />
             <VirtualizedList
-            listy={Array.from(this.variationMap.keys())}
+            openings={Array.from(this.variationMap.keys())}
             />
             </div>
         )
