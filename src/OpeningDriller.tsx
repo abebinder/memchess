@@ -1,84 +1,88 @@
-import React, {Component, Props} from "react";
+import React, {Component} from "react";
 import Chessboard from "chessboardjsx";
 import * as ChessJS from "chess.js"
-import {ShortMove, Square, ChessInstance} from "chess.js";
-import { EcoLoader } from "./EcoLoader";
+import {ChessInstance, ShortMove, Square} from "chess.js"
+import {EcoLoader, Opening} from "./EcoLoader";
 import * as Mover from "./Mover"
-import  VirtualizedList from './VirtualizedList'
+import VirtualizedList from './VirtualizedList'
 import './OpeningDriller.css'
+
 const Chess = typeof ChessJS === "function" ? ChessJS : ChessJS.Chess;
 
-class OpeningDriller extends Component{
+interface OpeningDrillerState {
+    loading: boolean,
+    activeVariationIndex: number,
+    game: ChessInstance
+}
 
-    game: ChessInstance = new Chess();
+class OpeningDriller extends Component<{}, OpeningDrillerState> {
+
     ecoLoader: EcoLoader = new EcoLoader();
     orientation: "white" | "black" = "white";
-    variationMap: Map<string, ShortMove[]>
-    variation: ShortMove[];
+    openings: Opening[]
 
     state = {
-        fen: "start",
-        history: [],
-        loading: true
+        loading: true,
+        activeVariationIndex: 0,
+        game: new Chess()
     };
 
-    componentDidMount(){
-        this.ecoLoader.load().then((data) => {
-            this.variationMap = data
-            this.variation = data.get("Sicilian Defense: Najdorf Variation") as ShortMove[];
-            this.setState({
-                fen: "start",
-                history: [],
-                loading: false
-            });
-            if(this.orientation === 'white') return
-            Mover.move({
-                move: this.variation[this.state.history.length],
-                game: this.game})
-            this.updateState()
+    componentDidMount() {
+        this.ecoLoader.load().then((openings) => {
+            this.openings = openings
+            this.setState({loading: false});
+            this.moveForWhite();
         });
     }
 
-    onDrop = ({sourceSquare, targetSquare} : {sourceSquare:Square, targetSquare:Square})=> {
+    onDrop = ({sourceSquare, targetSquare}: { sourceSquare: Square, targetSquare: Square }) => {
         const playermove = Mover.move({
-            move: this.variation[this.state.history.length],
-            game: this.game,
+            move: this.openings[this.state.activeVariationIndex].moves[this.state.game.history().length],
+            game: this.state.game,
             expectedSourceSquare: sourceSquare,
-            expectedTargetSquare: targetSquare})
-        if (!playermove) return
-        this.updateState()
-        const response = Mover.move({
-            move: this.variation[this.state.history.length],
-            game: this.game
+            expectedTargetSquare: targetSquare
         })
-        if(!response) return
-        this.updateState();
+        if (!playermove) return
+        this.setState({game: this.state.game});
+        const response = Mover.move({
+            move: this.openings[this.state.activeVariationIndex].moves[this.state.game.history().length],
+            game: this.state.game
+        })
+        if (!response) return
+        this.setState({game: this.state.game});
     };
 
-    updateState(){
+    changeVariation = (index: number) => {
         this.setState({
-            fen: this.game.fen(),
-            history: this.game.history({verbose: true}),
-            loading: false
-        });
+            activeVariationIndex: index,
+            game: new Chess()
+        }, this.moveForWhite);
     }
 
     render() {
-
-        if(this.state.loading) return <h2>Loading...</h2>;
+        if (this.state.loading) return <h2>Loading...</h2>;
         return (
             <div className='sideBySide'>
-            <Chessboard
-                id="humanVsHuman"
-                position= {this.state.fen}
-                onDrop={this.onDrop}
-                orientation = {this.orientation}
-            />
-            <VirtualizedList
-            openings={Array.from(this.variationMap.keys())}
-            />
+                <Chessboard
+                    id="chessboard"
+                    position={this.state.game.fen()}
+                    onDrop={this.onDrop}
+                    orientation={this.orientation}
+                />
+                <VirtualizedList
+                    openings={this.openings}
+                    onClickCallback={this.changeVariation}/>
             </div>
         )
+    }
+
+    private moveForWhite() {
+        if (this.orientation === 'white') return
+        Mover.move({
+            move: this.openings[this.state.activeVariationIndex].moves[this.state.game.history().length],
+            game: this.state.game
+        })
+        this.setState({game: this.state.game});
     }
 }
 

@@ -2,9 +2,11 @@ import React from 'react';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import {FixedSizeList} from 'react-window';
+import {Opening} from "./EcoLoader";
 
 interface VirtualizeListProps {
-    openings: string[]
+    openings: Opening[],
+    onClickCallback: Function
 }
 
 interface VirtualizedListState {
@@ -22,11 +24,11 @@ class VirtualizedList extends React.Component<VirtualizeListProps, VirtualizedLi
         this.renderRow = this.renderRow.bind(this);
     }
 
-
     handleListItemClick(index) {
         this.setState({
             selectedIndex: index,
         })
+        this.props.onClickCallback(index)
     }
 
     renderRow(props) {
@@ -38,7 +40,7 @@ class VirtualizedList extends React.Component<VirtualizeListProps, VirtualizedLi
                 selected={index === this.state.selectedIndex}
                 onClick={() => this.handleListItemClick(index)}
             >
-                <ListItemText primary={`${this.props.openings[index]}`}/>
+                <ListItemText primary={`${this.props.openings[index].name}`}/>
             </ListItem>
         );
     }
