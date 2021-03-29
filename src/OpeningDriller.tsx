@@ -12,7 +12,7 @@ const Chess = typeof ChessJS === "function" ? ChessJS : ChessJS.Chess;
 class OpeningDriller extends Component{
 
     ecoLoader: EcoLoader = new EcoLoader();
-    orientation: "white" | "black" = "white";
+    orientation: "white" | "black" = "black";
     variationMap: Map<string, ShortMove[]>
 
     state = {
@@ -57,26 +57,26 @@ class OpeningDriller extends Component{
         this.setState({game: this.state.game});
     };
 
-    someCallback = (index: number) => {
+    changeVariation(index: number) {
         this.setState({
             variation: this.variationMap.get((Array.from(this.variationMap.keys()))[index]),
             game: new Chess()
         }, this.moveForWhite);
     }
-    render() {
 
+    render() {
         if(this.state.loading) return <h2>Loading...</h2>;
         return (
             <div className='sideBySide'>
             <Chessboard
-                id="humanVsHuman"
+                id="chessboard"
                 position= {this.state.game.fen()}
                 onDrop={this.onDrop}
                 orientation = {this.orientation}
             />
             <VirtualizedList
             openings={Array.from(this.variationMap.keys())}
-             someCallback={this.someCallback}/>
+             someCallback={this.changeVariation}/>
             </div>
         )
     }
