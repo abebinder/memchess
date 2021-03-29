@@ -12,7 +12,7 @@ class OpeningDriller extends Component{
 
     game: ChessInstance = new Chess();
     ecoLoader: EcoLoader = new EcoLoader();
-    orientation: "white" | "black" = "white";
+    orientation: "white" | "black" = "black";
     variationMap: Map<string, ShortMove[]>
     variation: ShortMove[];
 
@@ -74,6 +74,14 @@ class OpeningDriller extends Component{
             fen: "start",
             history: [],
             game: new Chess()
+        }, () => {
+            if(this.orientation === 'white') return
+            console.log("black logging state")
+            console.log(this.state)
+            Mover.move({
+                move: this.state.variation[this.state.history.length],
+                game: this.state.game})
+            this.updateState()
         });
     }
 
