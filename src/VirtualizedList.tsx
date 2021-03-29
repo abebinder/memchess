@@ -4,7 +4,8 @@ import ListItemText from '@material-ui/core/ListItemText';
 import {FixedSizeList} from 'react-window';
 
 interface VirtualizeListProps {
-    openings: string[]
+    openings: string[],
+    someCallback: any
 }
 
 interface VirtualizedListState {
@@ -22,11 +23,11 @@ class VirtualizedList extends React.Component<VirtualizeListProps, VirtualizedLi
         this.renderRow = this.renderRow.bind(this);
     }
 
-
     handleListItemClick(index) {
         this.setState({
             selectedIndex: index,
         })
+        this.props.someCallback(index)
     }
 
     renderRow(props) {

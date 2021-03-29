@@ -19,7 +19,8 @@ class OpeningDriller extends Component{
     state = {
         fen: "start",
         history: [],
-        loading: true
+        loading: true,
+        selectedIndex: 0
     };
 
     componentDidMount(){
@@ -29,7 +30,8 @@ class OpeningDriller extends Component{
             this.setState({
                 fen: "start",
                 history: [],
-                loading: false
+                loading: false,
+                selectedIndex: 0
             });
             if(this.orientation === 'white') return
             Mover.move({
@@ -55,13 +57,26 @@ class OpeningDriller extends Component{
         this.updateState();
     };
 
+    someCallback = (index: number) => {
+        console.log("parent  informed of")
+        console.log(index)
+        this.setState({
+            fen: this.game.fen(),
+            history: this.game.history({verbose: true}),
+            loading: false,
+            selectedIndex: index
+        });
+    }
+
     updateState(){
         this.setState({
             fen: this.game.fen(),
             history: this.game.history({verbose: true}),
-            loading: false
+            loading: false,
+            selectedIndex: 0
         });
     }
+
 
     render() {
 
@@ -76,7 +91,7 @@ class OpeningDriller extends Component{
             />
             <VirtualizedList
             openings={Array.from(this.variationMap.keys())}
-            />
+             someCallback={this.someCallback}/>
             </div>
         )
     }
