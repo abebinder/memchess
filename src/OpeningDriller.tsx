@@ -21,15 +21,15 @@ class OpeningDriller extends Component{
         history: [],
         loading: true,
         selectedIndex: 0,
-        variation: []
+        variation: [],
+        game: new Chess()
     };
 
     resetState(){
         this.setState({
             fen: "start",
             history: [],
-            selectedIndex: 0,
-            variation: []
+            game: new Chess() 
         })
     }
 
@@ -44,7 +44,7 @@ class OpeningDriller extends Component{
             if(this.orientation === 'white') return
             Mover.move({
                 move: this.state.variation[this.state.history.length],
-                game: this.game})
+                game: this.state.game})
             this.updateState()
         });
     }
@@ -52,14 +52,14 @@ class OpeningDriller extends Component{
     onDrop = ({sourceSquare, targetSquare} : {sourceSquare:Square, targetSquare:Square})=> {
         const playermove = Mover.move({
             move: this.state.variation[this.state.history.length],
-            game: this.game,
+            game: this.state.game,
             expectedSourceSquare: sourceSquare,
             expectedTargetSquare: targetSquare})
         if (!playermove) return
         this.updateState()
         const response = Mover.move({
             move: this.state.variation[this.state.history.length],
-            game: this.game
+            game: this.state.game
         })
         if(!response) return
         this.updateState();
@@ -70,14 +70,17 @@ class OpeningDriller extends Component{
         console.log("parent  informed of")
         console.log(this.variationMap.get(openings[index]))
         this.setState({
-            variation: this.variationMap.get(openings[index])
+            variation: this.variationMap.get(openings[index]),
+            fen: "start",
+            history: [],
+            game: new Chess()
         });
     }
 
     updateState(){
         this.setState({
-            fen: this.game.fen(),
-            history: this.game.history({verbose: true}),
+            fen: this.state.game.fen(),
+            history: this.state.game.history({verbose: true}),
             loading: false,
             selectedIndex: 0
         });
