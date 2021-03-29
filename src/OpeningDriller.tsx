@@ -19,7 +19,7 @@ class OpeningDriller extends Component<{}, OpeningDrillerState>{
 
     ecoLoader: EcoLoader = new EcoLoader();
     orientation: "white" | "black" = "black";
-    variations: Opening[]
+    openings: Opening[]
 
     state = {
         loading: true,
@@ -29,9 +29,7 @@ class OpeningDriller extends Component<{}, OpeningDrillerState>{
 
     componentDidMount(){
         this.ecoLoader.load().then((data) => {
-            console.log("variations is")
-            console.log(data)
-            this.variations = data
+            this.openings = data
             this.setState({loading: false});
             this.moveForWhite();
         });
@@ -40,7 +38,7 @@ class OpeningDriller extends Component<{}, OpeningDrillerState>{
     private moveForWhite() {
         if (this.orientation === 'white') return
         Mover.move({
-            move: this.variations[this.state.activeVariationIndex].moves[this.state.game.history().length],
+            move: this.openings[this.state.activeVariationIndex].moves[this.state.game.history().length],
             game: this.state.game
         })
         this.setState({game: this.state.game});
@@ -48,14 +46,14 @@ class OpeningDriller extends Component<{}, OpeningDrillerState>{
 
     onDrop = ({sourceSquare, targetSquare} : {sourceSquare:Square, targetSquare:Square})=> {
         const playermove = Mover.move({
-            move: this.variations[this.state.activeVariationIndex].moves[this.state.game.history().length],
+            move: this.openings[this.state.activeVariationIndex].moves[this.state.game.history().length],
             game: this.state.game,
             expectedSourceSquare: sourceSquare,
             expectedTargetSquare: targetSquare})
         if (!playermove) return
         this.setState({game: this.state.game});
         const response = Mover.move({
-            move: this.variations[this.state.activeVariationIndex].moves[this.state.game.history().length],
+            move: this.openings[this.state.activeVariationIndex].moves[this.state.game.history().length],
             game: this.state.game
         })
         if(!response) return
@@ -80,7 +78,7 @@ class OpeningDriller extends Component<{}, OpeningDrillerState>{
                 orientation = {this.orientation}
             />
             <VirtualizedList
-             openings={this.variations}
+             openings={this.openings}
              someCallback={this.changeVariation}/>
             </div>
         )
