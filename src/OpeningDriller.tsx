@@ -10,15 +10,12 @@ const Chess = typeof ChessJS === "function" ? ChessJS : ChessJS.Chess;
 
 class OpeningDriller extends Component{
 
-    game: ChessInstance = new Chess();
     ecoLoader: EcoLoader = new EcoLoader();
     orientation: "white" | "black" = "white";
     variationMap: Map<string, ShortMove[]>
-    variation: ShortMove[];
 
     state = {
         loading: true,
-        selectedIndex: 0,
         variation: [],
         game: new Chess()
     };
@@ -34,10 +31,9 @@ class OpeningDriller extends Component{
     componentDidMount(){
         this.ecoLoader.load().then((data) => {
             this.variationMap = data
-            this.variation = data.get("Sicilian Defense: Najdorf Variation") as ShortMove[];
             this.setState({
                 loading: false,
-                variation: this.variation
+                variation: data.get("Sicilian Defense: Najdorf Variation") as ShortMove[]
             });
             if(this.orientation === 'white') return
             Mover.move({
