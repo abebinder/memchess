@@ -20,22 +20,30 @@ class OpeningDriller extends Component{
         fen: "start",
         history: [],
         loading: true,
-        selectedIndex: 0
+        selectedIndex: 0,
+        variation: []
     };
+
+    resetState(){
+        this.setState({
+            fen: "start",
+            history: [],
+            selectedIndex: 0,
+            variation: []
+        })
+    }
 
     componentDidMount(){
         this.ecoLoader.load().then((data) => {
             this.variationMap = data
             this.variation = data.get("Sicilian Defense: Najdorf Variation") as ShortMove[];
             this.setState({
-                fen: "start",
-                history: [],
                 loading: false,
-                selectedIndex: 0
+                variation: this.variation
             });
             if(this.orientation === 'white') return
             Mover.move({
-                move: this.variation[this.state.history.length],
+                move: this.state.variation[this.state.history.length],
                 game: this.game})
             this.updateState()
         });
@@ -43,14 +51,14 @@ class OpeningDriller extends Component{
 
     onDrop = ({sourceSquare, targetSquare} : {sourceSquare:Square, targetSquare:Square})=> {
         const playermove = Mover.move({
-            move: this.variation[this.state.history.length],
+            move: this.state.variation[this.state.history.length],
             game: this.game,
             expectedSourceSquare: sourceSquare,
             expectedTargetSquare: targetSquare})
         if (!playermove) return
         this.updateState()
         const response = Mover.move({
-            move: this.variation[this.state.history.length],
+            move: this.state.variation[this.state.history.length],
             game: this.game
         })
         if(!response) return
@@ -58,13 +66,11 @@ class OpeningDriller extends Component{
     };
 
     someCallback = (index: number) => {
+        const openings=Array.from(this.variationMap.keys())
         console.log("parent  informed of")
-        console.log(index)
+        console.log(this.variationMap.get(openings[index]))
         this.setState({
-            fen: this.game.fen(),
-            history: this.game.history({verbose: true}),
-            loading: false,
-            selectedIndex: index
+            variation: this.variationMap.get(openings[index])
         });
     }
 
