@@ -12,13 +12,11 @@ class OpeningDriller extends Component{
 
     game: ChessInstance = new Chess();
     ecoLoader: EcoLoader = new EcoLoader();
-    orientation: "white" | "black" = "black";
+    orientation: "white" | "black" = "white";
     variationMap: Map<string, ShortMove[]>
     variation: ShortMove[];
 
     state = {
-        fen: "start",
-        history: [],
         loading: true,
         selectedIndex: 0,
         variation: [],
@@ -43,7 +41,7 @@ class OpeningDriller extends Component{
             });
             if(this.orientation === 'white') return
             Mover.move({
-                move: this.state.variation[this.state.history.length],
+                move: this.state.variation[this.state.game.history().length],
                 game: this.state.game})
             this.updateState()
         });
@@ -51,14 +49,14 @@ class OpeningDriller extends Component{
 
     onDrop = ({sourceSquare, targetSquare} : {sourceSquare:Square, targetSquare:Square})=> {
         const playermove = Mover.move({
-            move: this.state.variation[this.state.history.length],
+            move: this.state.variation[this.state.game.history().length],
             game: this.state.game,
             expectedSourceSquare: sourceSquare,
             expectedTargetSquare: targetSquare})
         if (!playermove) return
         this.updateState()
         const response = Mover.move({
-            move: this.state.variation[this.state.history.length],
+            move: this.state.variation[this.state.game.history().length],
             game: this.state.game
         })
         if(!response) return
@@ -79,7 +77,7 @@ class OpeningDriller extends Component{
             console.log("black logging state")
             console.log(this.state)
             Mover.move({
-                move: this.state.variation[this.state.history.length],
+                move: this.state.variation[this.state.game.history().length],
                 game: this.state.game})
             this.updateState()
         });
@@ -89,8 +87,6 @@ class OpeningDriller extends Component{
         this.setState({
             fen: this.state.game.fen(),
             history: this.state.game.history({verbose: true}),
-            loading: false,
-            selectedIndex: 0
         });
     }
 
@@ -102,7 +98,7 @@ class OpeningDriller extends Component{
             <div className='sideBySide'>
             <Chessboard
                 id="humanVsHuman"
-                position= {this.state.fen}
+                position= {this.state.game.fen()}
                 onDrop={this.onDrop}
                 orientation = {this.orientation}
             />
