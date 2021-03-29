@@ -28,8 +28,8 @@ class OpeningDriller extends Component<{}, OpeningDrillerState>{
     };
 
     componentDidMount(){
-        this.ecoLoader.load().then((data) => {
-            this.openings = data
+        this.ecoLoader.load().then((openings) => {
+            this.openings = openings
             this.setState({loading: false});
             this.moveForWhite();
         });
