@@ -20,20 +20,12 @@ class OpeningDriller extends Component{
         game: new Chess()
     };
 
-    resetState(){
-        this.setState({
-            fen: "start",
-            history: [],
-            game: new Chess() 
-        })
-    }
-
     componentDidMount(){
         this.ecoLoader.load().then((data) => {
             this.variationMap = data
             this.setState({
                 loading: false,
-                variation: data.get("Sicilian Defense: Najdorf Variation") as ShortMove[]
+                variation: data.get("Alekhine Defense") as ShortMove[]
             });
             if(this.orientation === 'white') return
             Mover.move({
@@ -81,8 +73,7 @@ class OpeningDriller extends Component{
 
     updateState(){
         this.setState({
-            fen: this.state.game.fen(),
-            history: this.state.game.history({verbose: true}),
+            game: this.state.game,
         });
     }
 
