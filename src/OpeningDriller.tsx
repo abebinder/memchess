@@ -1,11 +1,12 @@
-import React, {Component, Props} from "react";
+import React, {Component} from "react";
 import Chessboard from "chessboardjsx";
 import * as ChessJS from "chess.js"
-import {ShortMove, Square, ChessInstance} from "chess.js";
-import { EcoLoader } from "./EcoLoader";
+import {ShortMove, Square} from "chess.js"
+import {EcoLoader} from "./EcoLoader";
 import * as Mover from "./Mover"
-import  VirtualizedList from './VirtualizedList'
+import VirtualizedList from './VirtualizedList'
 import './OpeningDriller.css'
+
 const Chess = typeof ChessJS === "function" ? ChessJS : ChessJS.Chess;
 
 class OpeningDriller extends Component{
@@ -31,7 +32,7 @@ class OpeningDriller extends Component{
             Mover.move({
                 move: this.state.variation[this.state.game.history().length],
                 game: this.state.game})
-            this.updateState()
+            this.setState({game: this.state.game});
         });
     }
 
@@ -42,13 +43,13 @@ class OpeningDriller extends Component{
             expectedSourceSquare: sourceSquare,
             expectedTargetSquare: targetSquare})
         if (!playermove) return
-        this.updateState()
+        this.setState({game: this.state.game});
         const response = Mover.move({
             move: this.state.variation[this.state.game.history().length],
             game: this.state.game
         })
         if(!response) return
-        this.updateState();
+        this.setState({game: this.state.game});
     };
 
     someCallback = (index: number) => {
@@ -57,27 +58,15 @@ class OpeningDriller extends Component{
         console.log(this.variationMap.get(openings[index]))
         this.setState({
             variation: this.variationMap.get(openings[index]),
-            fen: "start",
-            history: [],
             game: new Chess()
         }, () => {
             if(this.orientation === 'white') return
-            console.log("black logging state")
-            console.log(this.state)
             Mover.move({
                 move: this.state.variation[this.state.game.history().length],
                 game: this.state.game})
-            this.updateState()
+            this.setState({game: this.state.game});
         });
     }
-
-    updateState(){
-        this.setState({
-            game: this.state.game,
-        });
-    }
-
-
     render() {
 
         if(this.state.loading) return <h2>Loading...</h2>;
