@@ -79,7 +79,7 @@ class OpeningDriller extends Component<{}, OpeningDrillerState>{
             />
             <VirtualizedList
              openings={this.openings}
-             someCallback={this.changeVariation}/>
+             onClickCallback={this.changeVariation}/>
             </div>
         )
     }

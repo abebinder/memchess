@@ -6,7 +6,7 @@ import {Opening} from "./EcoLoader";
 
 interface VirtualizeListProps {
     openings: Opening[],
-    someCallback: any
+    onClickCallback: Function
 }
 
 interface VirtualizedListState {
@@ -28,7 +28,7 @@ class VirtualizedList extends React.Component<VirtualizeListProps, VirtualizedLi
         this.setState({
             selectedIndex: index,
         })
-        this.props.someCallback(index)
+        this.props.onClickCallback(index)
     }
 
     renderRow(props) {
