@@ -1,21 +1,32 @@
 
 import {ShortMove, Square} from "chess.js";
 import * as d3 from "d3";
-import { DSVRowArray, DSVRowString } from "d3";
+import { DSVRowString } from "d3";
+
+export interface Opening {
+    name: string,
+    moves: ShortMove[]
+}
+
 export class EcoLoader{
 
     prefixes: string[] = ['a', 'b', 'c', 'd', 'e']
 
     public async load() {
+        const openingList: Opening[] = []
         const openingNameToShortMoveMap = new Map<string, ShortMove[]>();
         for (const prefix of this.prefixes) {
             const data = await d3.tsv(`data/eco/${prefix}.tsv`);
             for (const elem of data) {
-                openingNameToShortMoveMap.set(elem["name"] as string, this.createShortMoves(elem));
+                openingList.push({
+                    name: elem["name"],
+                    moves: this.createShortMoves(elem)
+                })
             }
         }
-        var mapAsc = new Map([...openingNameToShortMoveMap.entries()].sort());
-        return mapAsc;
+        return openingList.sort((a, b) => {
+            return a.name.localeCompare(b.name);
+        })
     }
 
     createShortMoves(data: DSVRowString): ShortMove[] {
