@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import Chessboard from "chessboardjsx";
 import * as ChessJS from "chess.js"
-import {ShortMove, Square} from "chess.js"
+import {ChessInstance, ShortMove, Square} from "chess.js"
 import {EcoLoader} from "./EcoLoader";
 import * as Mover from "./Mover"
 import VirtualizedList from './VirtualizedList'
@@ -9,7 +9,13 @@ import './OpeningDriller.css'
 
 const Chess = typeof ChessJS === "function" ? ChessJS : ChessJS.Chess;
 
-class OpeningDriller extends Component{
+interface OpeningDrillerState{
+    loading: boolean,
+    variation: ShortMove[],
+    game: ChessInstance
+}
+
+class OpeningDriller extends Component<{}, OpeningDrillerState>{
 
     ecoLoader: EcoLoader = new EcoLoader();
     orientation: "white" | "black" = "black";
