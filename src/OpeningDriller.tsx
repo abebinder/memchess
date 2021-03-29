@@ -28,12 +28,17 @@ class OpeningDriller extends Component{
                 loading: false,
                 variation: data.get("Alekhine Defense") as ShortMove[]
             });
-            if(this.orientation === 'white') return
-            Mover.move({
-                move: this.state.variation[this.state.game.history().length],
-                game: this.state.game})
-            this.setState({game: this.state.game});
+            this.moveForWhite();
         });
+    }
+
+    private moveForWhite() {
+        if (this.orientation === 'white') return
+        Mover.move({
+            move: this.state.variation[this.state.game.history().length],
+            game: this.state.game
+        })
+        this.setState({game: this.state.game});
     }
 
     onDrop = ({sourceSquare, targetSquare} : {sourceSquare:Square, targetSquare:Square})=> {
@@ -53,19 +58,10 @@ class OpeningDriller extends Component{
     };
 
     someCallback = (index: number) => {
-        const openings=Array.from(this.variationMap.keys())
-        console.log("parent  informed of")
-        console.log(this.variationMap.get(openings[index]))
         this.setState({
-            variation: this.variationMap.get(openings[index]),
+            variation: this.variationMap.get((Array.from(this.variationMap.keys()))[index]),
             game: new Chess()
-        }, () => {
-            if(this.orientation === 'white') return
-            Mover.move({
-                move: this.state.variation[this.state.game.history().length],
-                game: this.state.game})
-            this.setState({game: this.state.game});
-        });
+        }, this.moveForWhite);
     }
     render() {
 
