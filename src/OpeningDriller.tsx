@@ -44,13 +44,28 @@ class OpeningDriller extends Component<{}, OpeningDrillerState> {
         })
         if (!playermove) return
         this.setState({game: this.state.game});
+        if(!this.resetIfEnd()) return
         const response = Mover.move({
             move: this.openings[this.state.activeVariationIndex].moves[this.state.game.history().length],
             game: this.state.game
         })
         if (!response) return
         this.setState({game: this.state.game});
+        this.resetIfEnd()
     };
+
+    resetIfEnd(){
+        if(this.state.game.history().length >= this.openings[this.state.activeVariationIndex].moves.length){
+            var millisecondsToWait = 1000;
+            setTimeout(() => {
+                this.setState({game: new Chess()});
+                this.moveForWhite()
+            }, millisecondsToWait);
+            return false;
+        }
+        return true;
+
+    }
 
     changeVariation = (index: number) => {
         this.setState({
