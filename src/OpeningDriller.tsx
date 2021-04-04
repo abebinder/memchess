@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import Chessboard from "chessboardjsx";
 import * as ChessJS from "chess.js"
 import {ChessInstance, ShortMove, Square} from "chess.js"
-import {EcoLoader, Opening} from "./EcoLoader";
+import {EcoLoader, Opening, OpeningNode} from "./EcoLoader";
 import * as Mover from "./Mover"
 import VirtualizedOpeningList from './VirtualizedOpeningList'
 import './OpeningDriller.css'
@@ -12,6 +12,7 @@ import {OpeningTree} from "./OpeningTree";
 const Chess = typeof ChessJS === "function" ? ChessJS : ChessJS.Chess;
 
 interface OpeningDrillerState {
+    treeLoading: boolean,
     loading: boolean,
     activeVariationIndex: number,
     game: ChessInstance
@@ -22,8 +23,10 @@ class OpeningDriller extends Component<{}, OpeningDrillerState> {
     ecoLoader: EcoLoader = new EcoLoader();
     orientation: "white" | "black" = "white";
     openings: Opening[]
+    openingNodes: OpeningNode[]
 
     state = {
+        treeLoading: true,
         loading: true,
         activeVariationIndex: 0,
         game: new Chess()
@@ -36,7 +39,8 @@ class OpeningDriller extends Component<{}, OpeningDrillerState> {
             this.moveForWhite();
         });
         this.ecoLoader.loadMap().then((openings) => {
-            console.log(openings)
+            this.openingNodes = openings
+            this.setState({treeLoading: false})
         })
     }
 
@@ -79,7 +83,7 @@ class OpeningDriller extends Component<{}, OpeningDrillerState> {
     }
 
     render() {
-        if (this.state.loading) return <h2>Loading...</h2>;
+        if (this.state.loading || this.state.treeLoading) return <h2>Loading...</h2>;
         return (
             <div className='sideBySide'>
                 <Chessboard
@@ -96,7 +100,9 @@ class OpeningDriller extends Component<{}, OpeningDrillerState> {
                  moves={this.openings[this.state.activeVariationIndex].moves}
                  activeMove={this.state.game.history().length}
                 />
-                <OpeningTree/>
+                <OpeningTree
+                 data={this.openingNodes}
+                />
             </div>
         )
     }

@@ -5,12 +5,13 @@ import {FixedSizeList} from 'react-window';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import TreeView from '@material-ui/lab/TreeView';
-import {Opening} from "./EcoLoader";
-import {makeStyles} from "@material-ui/core";
+import {OpeningNode} from "./EcoLoader";
 import {TreeItem} from "@material-ui/lab";
 
-
-export class OpeningTree extends React.Component {
+export interface OpeningTreeProps{
+    data: OpeningNode[]
+}
+export class OpeningTree extends React.Component<OpeningTreeProps> {
 
      data = {
         id: 'root',
@@ -40,7 +41,7 @@ export class OpeningTree extends React.Component {
 
     render() {
 
-        const renderTree = (nodes) => (
+        const renderTree = (nodes: OpeningNode) => (
             <TreeItem key={nodes.id} nodeId={nodes.id} label={nodes.name}>
                 {Array.isArray(nodes.children) ? nodes.children.map((node) => renderTree(node)) : null}
             </TreeItem>
@@ -54,7 +55,7 @@ export class OpeningTree extends React.Component {
                 defaultExpandIcon={<ChevronRightIcon />}
                 onNodeSelect = {this.itemSelect}
             >
-                {renderTree(this.data)}
+                {renderTree(this.props.data[18])}
             </TreeView>
         );
     }
