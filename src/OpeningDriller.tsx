@@ -4,8 +4,9 @@ import * as ChessJS from "chess.js"
 import {ChessInstance, ShortMove, Square} from "chess.js"
 import {EcoLoader, Opening} from "./EcoLoader";
 import * as Mover from "./Mover"
-import VirtualizedList from './VirtualizedList'
+import VirtualizedOpeningList from './VirtualizedOpeningList'
 import './OpeningDriller.css'
+import {MovesList} from "./MovesList";
 
 const Chess = typeof ChessJS === "function" ? ChessJS : ChessJS.Chess;
 
@@ -83,9 +84,14 @@ class OpeningDriller extends Component<{}, OpeningDrillerState> {
                     onDrop={this.onDrop}
                     orientation={this.orientation}
                 />
-                <VirtualizedList
+                <VirtualizedOpeningList
                     openings={this.openings}
-                    onClickCallback={this.changeVariation}/>
+                    onClickCallback={this.changeVariation}
+                />
+                <MovesList
+                 moves={this.openings[this.state.activeVariationIndex].moves}
+                 activeMove={this.state.game.history().length}
+                />
             </div>
         )
     }

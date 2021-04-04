@@ -4,16 +4,16 @@ import ListItemText from '@material-ui/core/ListItemText';
 import {FixedSizeList} from 'react-window';
 import {Opening} from "./EcoLoader";
 
-interface VirtualizeListProps {
+interface VirtualizedOpeningListProps {
     openings: Opening[],
     onClickCallback: Function
 }
 
-interface VirtualizedListState {
+interface VirtualizedOpeningListState {
     selectedIndex: number
 }
 
-class VirtualizedList extends React.Component<VirtualizeListProps, VirtualizedListState> {
+class VirtualizedOpeningList extends React.Component<VirtualizedOpeningListProps, VirtualizedOpeningListState> {
 
     constructor(props) {
         super(props);
@@ -59,4 +59,4 @@ class VirtualizedList extends React.Component<VirtualizeListProps, VirtualizedLi
     }
 }
 
-export default VirtualizedList;
+export default VirtualizedOpeningList;
