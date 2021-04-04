@@ -64,7 +64,7 @@ export class EcoLoader{
         openingList = openingList.sort((a, b) => {
             return a.moves.length - b.moves.length
         })
-        let someMap = new Map<ShortMove[], OpeningNode>();
+        let someMap = new Map<string, OpeningNode>();
         let someNodeList: OpeningNode[] = []
         for (const opening of openingList) {
             let node: OpeningNode  = {
@@ -72,15 +72,14 @@ export class EcoLoader{
                 moves: opening.moves,
                 name: opening.name
             }
-            someMap.set(opening.moves, node)
+            someMap.set(this.unravel(opening.moves), node)
             for (let i = opening.moves.length-1; i>-1; i--) {
                 if(i==0) {
                     someNodeList.push(node)
                     break;
                 }
-                const possibleParent = someMap.get(opening.moves.slice(0, i))
+                const possibleParent = someMap.get(this.unravel(opening.moves.slice(0, i)))
                 if(possibleParent){
-                    console.log("possible parent detected")
                    if(possibleParent.children) {
                        possibleParent.children.push(node)}
                    else{
@@ -91,7 +90,15 @@ export class EcoLoader{
 
             }
         }
-        return someMap;
+        return someNodeList;
+    }
+
+    unravel(arr: ShortMove[]){
+        let unraveled = ""
+        for (const shortMove of arr) {
+            unraveled = unraveled + shortMove.from + shortMove.to
+        }
+        return unraveled
     }
 
 
