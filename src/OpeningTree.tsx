@@ -33,6 +33,10 @@ export class OpeningTree extends React.Component {
         ],
     };
 
+     itemSelect(event, value){
+         console.log(value)
+     }
+
 
     render() {
 
@@ -48,6 +52,7 @@ export class OpeningTree extends React.Component {
                 defaultCollapseIcon={<ExpandMoreIcon />}
                 defaultExpanded={['root']}
                 defaultExpandIcon={<ChevronRightIcon />}
+                onNodeSelect = {this.itemSelect}
             >
                 {renderTree(this.data)}
             </TreeView>
