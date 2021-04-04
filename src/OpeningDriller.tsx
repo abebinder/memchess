@@ -7,6 +7,7 @@ import * as Mover from "./Mover"
 import VirtualizedOpeningList from './VirtualizedOpeningList'
 import './OpeningDriller.css'
 import {MovesList} from "./MovesList";
+import {OpeningTree} from "./OpeningTree";
 
 const Chess = typeof ChessJS === "function" ? ChessJS : ChessJS.Chess;
 
@@ -92,6 +93,7 @@ class OpeningDriller extends Component<{}, OpeningDrillerState> {
                  moves={this.openings[this.state.activeVariationIndex].moves}
                  activeMove={this.state.game.history().length}
                 />
+                <OpeningTree/>
             </div>
         )
     }
