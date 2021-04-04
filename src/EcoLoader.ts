@@ -62,7 +62,7 @@ export class EcoLoader{
             }
         }
         openingList = openingList.sort((a, b) => {
-            return a.moves.length - b.moves.length
+            return a.moves.length - b.moves.length || a.name.localeCompare(b.name)
         })
         let someMap = new Map<string, OpeningNode>();
         let someNodeList: OpeningNode[] = []
@@ -90,6 +90,7 @@ export class EcoLoader{
 
             }
         }
+        this.sortNodeList(someNodeList)
         return someNodeList;
     }
 
@@ -99,6 +100,15 @@ export class EcoLoader{
             unraveled = unraveled + shortMove.from + shortMove.to
         }
         return unraveled
+    }
+
+    sortNodeList(arr: OpeningNode[]){
+        arr.sort((a, b) => {
+            return a.name.localeCompare(b.name)
+        })
+        for (const openingNode of arr) {
+            if(openingNode.children) this.sortNodeList(openingNode.children)
+        }
     }
 
 
