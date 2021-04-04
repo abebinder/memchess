@@ -35,6 +35,9 @@ class OpeningDriller extends Component<{}, OpeningDrillerState> {
             this.setState({loading: false});
             this.moveForWhite();
         });
+        this.ecoLoader.loadMap().then((openings) => {
+            console.log(openings)
+        })
     }
 
     onDrop = ({sourceSquare, targetSquare}: { sourceSquare: Square, targetSquare: Square }) => {

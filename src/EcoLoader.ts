@@ -2,8 +2,17 @@
 import {ShortMove, Square} from "chess.js";
 import * as d3 from "d3";
 import { DSVRowString } from "d3";
+import { v4 as uuidv4 } from 'uuid';
+
 
 export interface Opening {
+    name: string,
+    moves: ShortMove[]
+}
+
+export interface OpeningNode{
+    children?: OpeningNode[],
+    id: string,
     name: string,
     moves: ShortMove[]
 }
@@ -39,4 +48,51 @@ export class EcoLoader{
         }
         return arr;
     }
+
+
+    public async loadMap() {
+        let openingList: Opening[] = []
+        for (const prefix of this.prefixes) {
+            const data = await d3.tsv(`data/eco/${prefix}.tsv`);
+            for (const elem of data) {
+                openingList.push({
+                    name: elem["name"],
+                    moves: this.createShortMoves(elem)
+                })
+            }
+        }
+        openingList = openingList.sort((a, b) => {
+            return a.moves.length - b.moves.length
+        })
+        let someMap = new Map<ShortMove[], OpeningNode>();
+        let someNodeList: OpeningNode[] = []
+        for (const opening of openingList) {
+            let node: OpeningNode  = {
+                id: uuidv4(),
+                moves: opening.moves,
+                name: opening.name
+            }
+            someMap.set(opening.moves, node)
+            for (let i = opening.moves.length-1; i>-1; i--) {
+                if(i==0) {
+                    someNodeList.push(node)
+                    break;
+                }
+                const possibleParent = someMap.get(opening.moves.slice(0, i))
+                if(possibleParent){
+                    console.log("possible parent detected")
+                   if(possibleParent.children) {
+                       possibleParent.children.push(node)}
+                   else{
+                       possibleParent.children = [node]
+                   }
+                   break;
+                }
+
+            }
+        }
+        return someMap;
+    }
+
+
 }
