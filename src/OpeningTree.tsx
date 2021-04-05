@@ -17,33 +17,29 @@ export class OpeningTree extends React.Component<OpeningTreeProps> {
          console.log(value)
      }
 
+    renderOpeningNode(nodes: OpeningNode) {
+        return <TreeItem key={nodes.id} nodeId={nodes.id} label={nodes.name}>
+            {Array.isArray(nodes.children) ? nodes.children.map((node) => this.renderOpeningNode(node)) : null}
+        </TreeItem>
+    }
+
+    renderListOfOpeningNodes(someNodes: OpeningNode[]) {
+        return someNodes.map((node, index) => {
+            return this.renderOpeningNode(node)
+        })
+    }
+
 
     render() {
-
-
-        const renderTree = (nodes: OpeningNode) => (
-            <TreeItem key={nodes.id} nodeId={nodes.id} label={nodes.name}>
-                {Array.isArray(nodes.children) ? nodes.children.map((node) => renderTree(node)) : null}
-            </TreeItem>
-        );
-
-        const renderTreeNodes = (someNodes: OpeningNode[]) => {
-            return someNodes.map((nodes, index) => {
-                return <TreeItem key={nodes.id} nodeId={nodes.id} label={nodes.name}>
-                    {Array.isArray(nodes.children) ? nodes.children.map((node) => renderTree(node)) : null}
-                </TreeItem>
-            })
-        }
 
         return (
             <TreeView
                 className="treeClasas"
                 defaultCollapseIcon={<ExpandMoreIcon />}
-                defaultExpanded={['root']}
                 defaultExpandIcon={<ChevronRightIcon />}
                 onNodeSelect = {this.itemSelect}
             >
-                {renderTreeNodes(this.props.data)}
+                {this.renderListOfOpeningNodes(this.props.data)}
             </TreeView>
         );
     }
