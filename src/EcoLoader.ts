@@ -72,7 +72,7 @@ export class EcoLoader{
                 moves: opening.moves,
                 name: opening.name
             }
-            someMap.set(this.unravel(opening.moves), node)
+            var addToMap = true;
             for (let i = opening.moves.length-1; i>-1; i--) {
                 if(i==0) {
                     someNodeList.push(node)
@@ -80,6 +80,10 @@ export class EcoLoader{
                 }
                 const possibleParent = someMap.get(this.unravel(opening.moves.slice(0, i)))
                 if(possibleParent){
+                    if(possibleParent.name === node.name){
+                        addToMap = false;
+                        break;
+                    }
                    if(possibleParent.children) {
                        possibleParent.children.push(node)}
                    else{
@@ -89,6 +93,7 @@ export class EcoLoader{
                 }
 
             }
+            if (addToMap) someMap.set(this.unravel(opening.moves), node)
         }
         this.sortNodeList(someNodeList)
         return someNodeList;
