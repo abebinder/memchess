@@ -17,6 +17,11 @@ export interface OpeningNode{
     moves: ShortMove[]
 }
 
+export interface EcoResult{
+    idToNodeMap:  Map<string, OpeningNode[]>
+    rootNodes: OpeningNode[]
+}
+
 export class EcoLoader{
 
     prefixes: string[] = ['a', 'b', 'c', 'd', 'e']
@@ -65,6 +70,7 @@ export class EcoLoader{
             return a.moves.length - b.moves.length || a.name.localeCompare(b.name)
         })
         let someMap = new Map<string, OpeningNode>();
+        let returnMap = new Map<string, OpeningNode>();
         let someNodeList: OpeningNode[] = []
         for (const opening of openingList) {
             let node: OpeningNode  = {
@@ -72,6 +78,7 @@ export class EcoLoader{
                 moves: opening.moves,
                 name: opening.name
             }
+            returnMap.set(node.id, node)
             var addToMap = true;
             for (let i = opening.moves.length-1; i>-1; i--) {
                 if(i==0) {
@@ -96,7 +103,7 @@ export class EcoLoader{
             if (addToMap) someMap.set(this.unravel(opening.moves), node)
         }
         this.sortNodeList(someNodeList)
-        return someNodeList;
+        return {idToNodeMap: returnMap, rootNodes: someNodeList};
     }
 
     unravel(arr: ShortMove[]){

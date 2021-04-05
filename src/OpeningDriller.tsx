@@ -24,6 +24,7 @@ class OpeningDriller extends Component<{}, OpeningDrillerState> {
     orientation: "white" | "black" = "white";
     openings: Opening[]
     openingNodes: OpeningNode[]
+    openingNodesIdMap: Map<string, OpeningNode>
 
     state = {
         treeLoading: true,
@@ -39,7 +40,8 @@ class OpeningDriller extends Component<{}, OpeningDrillerState> {
             this.moveForWhite();
         });
         this.ecoLoader.loadMap().then((openings) => {
-            this.openingNodes = openings
+            this.openingNodes = openings.rootNodes
+            this.openingNodesIdMap = openings.idToNodeMap
             this.setState({treeLoading: false})
         })
     }
