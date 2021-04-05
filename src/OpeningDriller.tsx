@@ -82,6 +82,10 @@ class OpeningDriller extends Component<{}, OpeningDrillerState> {
         }, this.moveForWhite);
     }
 
+    treeCallback = (node: OpeningNode ) => {
+        console.log(node)
+}
+
     render() {
         if (this.state.loading || this.state.treeLoading) return <h2>Loading...</h2>;
         return (
