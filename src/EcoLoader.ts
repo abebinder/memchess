@@ -5,6 +5,7 @@ import { DSVRowString } from "d3";
 import { v4 as uuidv4 } from 'uuid';
 // @ts-ignore
 import adata from './eco/a.tsv'
+import Papa from 'papaparse'
 
 
 export interface Opening {
@@ -88,10 +89,15 @@ export class EcoLoader{
             console.log("invoking d3")
             const data = await d3.tsv(adata);
             console.log("invoked d3")
-            // @ts-ignore
-            d3.tsv(adata, function(adata){
-                console.log(adata)
+            console.log("invoking papa")
+            Papa.parse(adata, {
+                download: true,
+                complete: function (input) {
+                    console.log("papa callback happening")
+                    console.log(input.data)
+                }
             });
+            console.log("papa invoked")
             console.log(data)
             for (const elem of data) {
                 openingList.push({
