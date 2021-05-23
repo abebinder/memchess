@@ -88,6 +88,10 @@ export class EcoLoader{
             console.log("invoking d3")
             const data = await d3.tsv(adata);
             console.log("invoked d3")
+            // @ts-ignore
+            d3.tsv(adata, function(adata){
+                console.log(adata)
+            });
             console.log(data)
             for (const elem of data) {
                 openingList.push({
