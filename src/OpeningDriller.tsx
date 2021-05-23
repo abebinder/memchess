@@ -30,7 +30,7 @@ class OpeningDriller extends Component<{}, OpeningDrillerState> {
         activeId: ""
     };
 
-    componentDidMount() {;
+    componentDidMount() {
         this.ecoLoader.loadMap().then((openings) => {
             this.openingNodes = openings.rootNodes
             this.openingNodesIdMap = openings.idToNodeMap

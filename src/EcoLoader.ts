@@ -78,7 +78,7 @@ export class EcoLoader{
     private async createOpeningList() {
         let openingList: Opening[] = []
         for (const prefix of this.prefixes) {
-            const data = await d3.tsv(`data/eco/${prefix}.tsv`);
+            const data = await d3.tsv(`https://raw.githubusercontent.com/niklasf/eco/master/${prefix}.tsv`);
             for (const elem of data) {
                 openingList.push({
                     name: elem["name"],
