@@ -35,6 +35,8 @@ export class EcoLoader{
 
     public async loadMap() {
         let openingList = await this.createOpeningList();
+        console.log("opening list created")
+        console.log(openingList)
         let openingNodeChildMap = new Map<string, OpeningNode>();
         let idToNodeMap = new Map<string, OpeningNode>();
         let rootNodes: OpeningNode[] = []
@@ -76,6 +78,7 @@ export class EcoLoader{
 
 
     private async createOpeningList() {
+        console.log("creating opening list")
         let openingList: Opening[] = []
         for (const prefix of this.prefixes) {
             const data = await d3.tsv(`data/eco/${prefix}.tsv`);

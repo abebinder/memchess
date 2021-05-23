@@ -30,8 +30,11 @@ class OpeningDriller extends Component<{}, OpeningDrillerState> {
         activeId: ""
     };
 
-    componentDidMount() {;
+    componentDidMount() {
+        console.log("about to load map")
         this.ecoLoader.loadMap().then((openings) => {
+            console.log("map loaded")
+            console.log(openings)
             this.openingNodes = openings.rootNodes
             this.openingNodesIdMap = openings.idToNodeMap
             this.setState( {activeId :  Array.from(this.openingNodesIdMap.keys())[0]})
