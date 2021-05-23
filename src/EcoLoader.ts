@@ -87,7 +87,7 @@ export class EcoLoader{
         let openingList: Opening[] = []
         for (const prefix of this.prefixes) {
             console.log("invoking d3")
-            const data = await d3.tsv(adata);
+            const data = await d3.tsv("https://raw.githubusercontent.com/niklasf/eco/db1c111f9ef746074e62ddf06592a2e22c372009/a.tsv");
             console.log("invoked d3")
             console.log("invoking papa")
             Papa.parse(adata, {
