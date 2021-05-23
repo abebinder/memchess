@@ -1,12 +1,12 @@
 import React from 'react';
 import {ShortMove} from "chess.js";
 
-interface VirtualizeListProps {
+interface MovesListProps {
     moves: ShortMove[],
     activeMove: number
 }
 
-export class MovesList extends React.Component<VirtualizeListProps> {
+export class MovesList extends React.Component<MovesListProps> {
     render() {
         const listItems = this.props.moves.map((move, index) => {
             var suffix = index == this.props.activeMove ? "  <---------" : "";

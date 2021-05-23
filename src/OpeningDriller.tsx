@@ -1,44 +1,48 @@
 import React, {Component} from "react";
 import Chessboard from "chessboardjsx";
 import * as ChessJS from "chess.js"
-import {ChessInstance, ShortMove, Square} from "chess.js"
-import {EcoLoader, Opening} from "./EcoLoader";
+import {ChessInstance, Square} from "chess.js"
+import {EcoLoader, Opening, OpeningNode} from "./EcoLoader";
 import * as Mover from "./Mover"
-import VirtualizedOpeningList from './VirtualizedOpeningList'
 import './OpeningDriller.css'
 import {MovesList} from "./MovesList";
+import {OpeningTree} from "./OpeningTree";
 
 const Chess = typeof ChessJS === "function" ? ChessJS : ChessJS.Chess;
 
 interface OpeningDrillerState {
-    loading: boolean,
-    activeVariationIndex: number,
+    treeLoading: boolean,
     game: ChessInstance
+    activeId: string
 }
 
 class OpeningDriller extends Component<{}, OpeningDrillerState> {
 
     ecoLoader: EcoLoader = new EcoLoader();
-    orientation: "white" | "black" = "white";
+    orientation: "white" | "black" = "black";
     openings: Opening[]
+    openingNodes: OpeningNode[]
+    openingNodesIdMap: Map<string, OpeningNode>
 
     state = {
-        loading: true,
-        activeVariationIndex: 0,
-        game: new Chess()
+        treeLoading: true,
+        game: new Chess(),
+        activeId: ""
     };
 
-    componentDidMount() {
-        this.ecoLoader.load().then((openings) => {
-            this.openings = openings
-            this.setState({loading: false});
+    componentDidMount() {;
+        this.ecoLoader.loadMap().then((openings) => {
+            this.openingNodes = openings.rootNodes
+            this.openingNodesIdMap = openings.idToNodeMap
+            this.setState( {activeId :  Array.from(this.openingNodesIdMap.keys())[0]})
+            this.setState({treeLoading: false})
             this.moveForWhite();
-        });
+        })
     }
 
     onDrop = ({sourceSquare, targetSquare}: { sourceSquare: Square, targetSquare: Square }) => {
         const playermove = Mover.move({
-            move: this.openings[this.state.activeVariationIndex].moves[this.state.game.history().length],
+            move: this.openingNodesIdMap.get(this.state.activeId).moves[this.state.game.history().length],
             game: this.state.game,
             expectedSourceSquare: sourceSquare,
             expectedTargetSquare: targetSquare
@@ -47,7 +51,7 @@ class OpeningDriller extends Component<{}, OpeningDrillerState> {
         this.setState({game: this.state.game});
         if(this.resetIfEnd()) return
         const response = Mover.move({
-            move: this.openings[this.state.activeVariationIndex].moves[this.state.game.history().length],
+            move: this.openingNodesIdMap.get(this.state.activeId).moves[this.state.game.history().length],
             game: this.state.game
         })
         if (!response) return
@@ -56,26 +60,25 @@ class OpeningDriller extends Component<{}, OpeningDrillerState> {
     };
 
     resetIfEnd(){
-        if (this.state.game.history().length < this.openings[this.state.activeVariationIndex].moves.length) {
+        if (this.state.game.history().length < this.openingNodesIdMap.get(this.state.activeId).moves.length) {
             return false;
         }
-        var millisecondsToWait = 1000;
         setTimeout(() => {
             this.setState({game: new Chess()});
             this.moveForWhite()
-        }, millisecondsToWait);
+        }, 1000);
         return true;
     }
 
-    changeVariation = (index: number) => {
+    treeCallback = (event, value) => {
         this.setState({
-            activeVariationIndex: index,
+            activeId: value,
             game: new Chess()
         }, this.moveForWhite);
-    }
+}
 
     render() {
-        if (this.state.loading) return <h2>Loading...</h2>;
+        if (this.state.treeLoading) return <h2>Loading...</h2>;
         return (
             <div className='sideBySide'>
                 <Chessboard
@@ -84,13 +87,13 @@ class OpeningDriller extends Component<{}, OpeningDrillerState> {
                     onDrop={this.onDrop}
                     orientation={this.orientation}
                 />
-                <VirtualizedOpeningList
-                    openings={this.openings}
-                    onClickCallback={this.changeVariation}
+                <OpeningTree
+                 data={this.openingNodes}
+                 onClickCallback={this.treeCallback}
                 />
                 <MovesList
-                 moves={this.openings[this.state.activeVariationIndex].moves}
-                 activeMove={this.state.game.history().length}
+                    moves={this.openingNodesIdMap.get(this.state.activeId).moves}
+                    activeMove={this.state.game.history().length}
                 />
             </div>
         )
@@ -99,7 +102,7 @@ class OpeningDriller extends Component<{}, OpeningDrillerState> {
     private moveForWhite() {
         if (this.orientation === 'white') return
         Mover.move({
-            move: this.openings[this.state.activeVariationIndex].moves[this.state.game.history().length],
+            move: this.openingNodesIdMap.get(this.state.activeId).moves[this.state.game.history().length],
             game: this.state.game
         })
         this.setState({game: this.state.game});
