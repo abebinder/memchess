@@ -80,6 +80,8 @@ export class EcoLoader{
 
 
     private async createOpeningList() {
+        console.log("logging adata")
+        console.log(adata)
         console.log("creating opening list")
         let openingList: Opening[] = []
         for (const prefix of this.prefixes) {

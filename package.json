@@ -50,6 +50,7 @@
     ]
   },
   "devDependencies": {
-    "@types/chess.js": "^0.10.1"
+    "@types/chess.js": "^0.10.1",
+    "serve": "^11.3.2"
   }
 }
