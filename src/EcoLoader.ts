@@ -3,6 +3,8 @@ import {ShortMove, Square} from "chess.js";
 import * as d3 from "d3";
 import { DSVRowString } from "d3";
 import { v4 as uuidv4 } from 'uuid';
+// @ts-ignore
+import adata from './eco/a.tsv'
 
 
 export interface Opening {
@@ -82,7 +84,7 @@ export class EcoLoader{
         let openingList: Opening[] = []
         for (const prefix of this.prefixes) {
             console.log("invoking d3")
-            const data = await d3.tsv(`${process.env.PUBLIC_URL}/data/eco/${prefix}.tsv`);
+            const data = await d3.tsv(adata);
             console.log("invoked d3")
             console.log(data)
             for (const elem of data) {
