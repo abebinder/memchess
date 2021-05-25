@@ -89,7 +89,7 @@ class OpeningDriller extends Component<{}, OpeningDrillerState> {
                 />
                 <OpeningTree
                  data={this.openingNodes}
-                 onClickCallback={this.treeCallback}
+                 invokerClickCallback={this.treeCallback}
                 />
                 <MovesList
                     moves={this.openingNodesIdMap.get(this.state.activeId).moves}

@@ -7,13 +7,29 @@ import {TreeItem} from "@material-ui/lab";
 
 export interface OpeningTreeProps{
     data: OpeningNode[],
-    onClickCallback: any,
+    invokerClickCallback: any,
 }
-export class OpeningTree extends React.Component<OpeningTreeProps> {
 
-     itemSelect(event, value){
-         console.log(value)
-     }
+interface OpeningTreeState{
+    expanded: string[],
+    selected: string
+}
+
+export class OpeningTree extends React.Component<OpeningTreeProps, OpeningTreeState> {
+
+    componentWillMount() {
+        this.setState({expanded: [], selected: ""})
+    }
+
+    localClickCallback = (event, value) => {
+        var expanded = this.state.expanded
+        if(value === this.state.selected){
+            const index = expanded.indexOf(value);
+            index > -1 ? expanded.splice(index, 1) : expanded.push(value);
+        }
+        this.setState({selected: value, expanded: expanded})
+        this.props.invokerClickCallback(event,value)
+    }
 
     renderOpeningNode(openingNode: OpeningNode) {
         return <TreeItem key={openingNode.id} nodeId={openingNode.id} label={openingNode.name}>
@@ -32,10 +48,12 @@ export class OpeningTree extends React.Component<OpeningTreeProps> {
 
         return (
             <TreeView
+                expanded={this.state.expanded}
+                selected = {this.state.selected}
                 className="treeClasas"
                 defaultCollapseIcon={<ExpandMoreIcon />}
                 defaultExpandIcon={<ChevronRightIcon />}
-                onNodeSelect = {this.props.onClickCallback}
+                onNodeSelect = {this.localClickCallback}
             >
                 {this.renderListOfOpeningNodes(this.props.data)}
             </TreeView>
