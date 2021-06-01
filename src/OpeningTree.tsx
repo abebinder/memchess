@@ -1,4 +1,5 @@
 import React from 'react';
+import './OpeningTree.css'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import TreeView from '@material-ui/lab/TreeView';
@@ -50,7 +51,7 @@ export class OpeningTree extends React.Component<OpeningTreeProps, OpeningTreeSt
             <TreeView
                 expanded={this.state.expanded}
                 selected = {this.state.selected}
-                className="treeClasas"
+                className="tree"
                 defaultCollapseIcon={<ExpandMoreIcon />}
                 defaultExpandIcon={<ChevronRightIcon />}
                 onNodeSelect = {this.localClickCallback}

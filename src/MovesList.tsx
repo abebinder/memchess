@@ -1,5 +1,6 @@
 import React from 'react';
 import {ShortMove} from "chess.js";
+import './MovesList.css'
 
 interface MovesListProps {
     moves: ShortMove[],
@@ -12,6 +13,13 @@ export class MovesList extends React.Component<MovesListProps> {
             var suffix = index == this.props.activeMove ? "  <---------" : "";
             return <li>{move.from + " to  " + move.to + suffix}</li>;
         })
-        return (<ul>{listItems}</ul>);
+        return (
+            <div className='moveslist'>
+                <ul>
+                    {listItems}
+                </ul>
+            </div>
+        );
+
     }
 }

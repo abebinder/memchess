@@ -1,0 +1,9 @@
+.moveslist{
+    flexGrow: 1;
+    width: 15%;
+    height:100%;
+    max-height: 100%;
+    overflow-y: auto;
+    border: 20px solid rgba(0, 0, 0, 0.05);
+    border-style: none none none solid;
+}
