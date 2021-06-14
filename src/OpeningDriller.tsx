@@ -6,7 +6,6 @@ import {ChessInstance} from "chess.js"
 import {EcoLoader, OpeningNode} from "./EcoLoader";
 import * as Mover from "./Mover"
 import './OpeningDriller.css'
-import {MovesList} from "./MovesList";
 import {OpeningTree} from "./OpeningTree";
 import {Button} from "@material-ui/core";
 
@@ -96,16 +95,28 @@ class OpeningDriller extends Component<{}, OpeningDrillerState> {
 
     render() {
         if (this.state.treeLoading) return <h2>Loading...</h2>;
+        var arrow = []
+        if (this.state.game.history().length < this.openingNodesIdMap.get(this.state.activeId).moves.length) {
+            arrow = [
+                {
+                    orig: this.openingNodesIdMap.get(this.state.activeId).moves[this.state.game.history().length].from,
+                    dest: this.openingNodesIdMap.get(this.state.activeId).moves[this.state.game.history().length].to,
+                    brush: 'green'
+                }
+            ]
+        }
         return (
             <div className='sideBySide'>
                 <Chessground
                     fen={this.state.game.fen()}
                     onMove={this.onDrop}
                     orientation={this.state.orientation}
-                />
-                <MovesList
-                    moves={this.openingNodesIdMap.get(this.state.activeId).moves}
-                    activeMove={this.state.game.history().length}
+                    drawable={
+                        {
+                            enabled: false,
+                            autoShapes: arrow
+                        }
+                    }
                 />
                 <OpeningTree
                     data={this.openingNodes}
