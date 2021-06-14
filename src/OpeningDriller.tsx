@@ -3,7 +3,7 @@ import Chessground from "react-chessground"
 import "react-chessground/dist/styles/chessground.css"
 import * as ChessJS from "chess.js"
 import {ChessInstance} from "chess.js"
-import {EcoLoader, Opening, OpeningNode} from "./EcoLoader";
+import {EcoLoader, OpeningNode} from "./EcoLoader";
 import * as Mover from "./Mover"
 import './OpeningDriller.css'
 import {MovesList} from "./MovesList";
@@ -13,7 +13,6 @@ import {Button} from "@material-ui/core";
 const Chess = typeof ChessJS === "function" ? ChessJS : ChessJS.Chess;
 
 interface OpeningDrillerState {
-    fen: string
     orientation: string,
     treeLoading: boolean,
     game: ChessInstance
@@ -23,7 +22,6 @@ interface OpeningDrillerState {
 class OpeningDriller extends Component<{}, OpeningDrillerState> {
 
     ecoLoader: EcoLoader = new EcoLoader();
-    openings: Opening[]
     openingNodes: OpeningNode[]
     openingNodesIdMap: Map<string, OpeningNode>
 
@@ -31,7 +29,6 @@ class OpeningDriller extends Component<{}, OpeningDrillerState> {
         orientation: "white",
         treeLoading: true,
         game: new Chess(),
-        fen: new Chess().fen(),
         activeId: ""
     };
 
@@ -40,9 +37,8 @@ class OpeningDriller extends Component<{}, OpeningDrillerState> {
         this.ecoLoader.loadMap().then((openings) => {
             this.openingNodes = openings.rootNodes
             this.openingNodesIdMap = openings.idToNodeMap
-            this.setState({activeId: Array.from(this.openingNodesIdMap.keys())[0]})
-            this.setState({treeLoading: false})
-            this.moveForWhite();
+            this.setState({activeId: Array.from(this.openingNodesIdMap.keys())[0], treeLoading: false},
+                this.moveForWhite)
         })
     }
 
@@ -57,7 +53,7 @@ class OpeningDriller extends Component<{}, OpeningDrillerState> {
             this.forceUpdate()
             return
         }
-        this.setState({game: this.state.game, fen: this.state.game.fen()});
+        this.setState({game: this.state.game});
         if (this.resetIfEnd()) {
             this.forceUpdate()
             return
@@ -70,16 +66,15 @@ class OpeningDriller extends Component<{}, OpeningDrillerState> {
             this.forceUpdate()
             return;
         }
-        // @ts-ignore
-        this.setState({game: this.state.game, fen: this.state.game.fen()}, this.resetIfEnd);
+        this.setState({game: this.state.game}, this.resetIfEnd);
     };
 
     switchColor = () => {
-        var newOrientation = "white"
+        var newOrientation = "white";
         if (this.state.orientation === "white") {
             newOrientation = "black"
         }
-        this.setState({orientation: newOrientation, game: new Chess(), fen: this.state.game.fen()}, this.moveForWhite);
+        this.setState({orientation: newOrientation, game: new Chess()}, this.moveForWhite);
     }
 
     resetIfEnd() {
@@ -87,7 +82,7 @@ class OpeningDriller extends Component<{}, OpeningDrillerState> {
             return false;
         }
         setTimeout(() => {
-            this.setState({game: new Chess(), fen: this.state.game.fen()}, this.moveForWhite);
+            this.setState({game: new Chess()}, this.moveForWhite);
         }, 1000);
         return true;
     }
@@ -95,8 +90,7 @@ class OpeningDriller extends Component<{}, OpeningDrillerState> {
     treeCallback = (event, value) => {
         this.setState({
             activeId: value,
-            game: new Chess(),
-            fen: this.state.game.fen()
+            game: new Chess()
         }, this.moveForWhite);
     }
 
@@ -108,7 +102,6 @@ class OpeningDriller extends Component<{}, OpeningDrillerState> {
                     fen={this.state.game.fen()}
                     onMove={this.onDrop}
                     orientation={this.state.orientation}
-                    style={{margin: "auto"}}
                 />
                 <MovesList
                     moves={this.openingNodesIdMap.get(this.state.activeId).moves}
@@ -124,12 +117,13 @@ class OpeningDriller extends Component<{}, OpeningDrillerState> {
     }
 
     private moveForWhite() {
-        if (this.state.orientation === 'white') return
-        Mover.move({
-            move: this.openingNodesIdMap.get(this.state.activeId).moves[this.state.game.history().length],
-            game: this.state.game
-        })
-        this.setState({game: this.state.game});
+        if (this.state.orientation === 'black') {
+            Mover.move({
+                move: this.openingNodesIdMap.get(this.state.activeId).moves[this.state.game.history().length],
+                game: this.state.game
+            })
+            this.setState({game: this.state.game});
+        }
     }
 }
 

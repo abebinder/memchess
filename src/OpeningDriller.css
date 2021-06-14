@@ -11,3 +11,14 @@
     width: 90%;
     border: 20px solid rgba(0, 0, 0, 0.05);
 }
+
+/*magically used  by chessground through its naming*/
+.cg-wrap {
+    width: 70vmin;
+    height: 70vmin;
+    min-width: 70vmin;
+    min-height: 70vmin;
+    position: relative;
+    display: block;
+    margin: auto;
+}

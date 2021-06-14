@@ -8,15 +8,19 @@ interface MovesListProps {
 }
 
 export class MovesList extends React.Component<MovesListProps> {
-    render() {
-        const listItems = this.props.moves.map((move, index) => {
+
+    createListItems(){
+        return this.props.moves.map((move, index) => {
             var suffix = index == this.props.activeMove ? "  <---------" : "";
             return <li>{move.from + " to  " + move.to + suffix}</li>;
         })
+    }
+
+    render() {
         return (
             <div className='moveslist'>
                 <ul>
-                    {listItems}
+                    {this.createListItems()}
                 </ul>
             </div>
         );
