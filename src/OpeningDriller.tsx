@@ -13,21 +13,17 @@ const Chess = typeof ChessJS === "function" ? ChessJS : ChessJS.Chess;
 
 interface OpeningDrillerState {
     orientation: string,
-    treeLoading: boolean,
-    initLoading: boolean
-    game: ChessInstance
+    initLoading: boolean,
+    game: ChessInstance,
     moves: ShortMove[]
 }
 
 class OpeningDriller extends Component<{}, OpeningDrillerState> {
 
     ecoLoader: EcoLoader = new EcoLoader();
-    openingNodes: OpeningNode[]
-    openingNodesIdMap: Map<string, OpeningNode>
 
     state = {
         orientation: "white",
-        treeLoading: true,
         initLoading: true,
         game: new Chess(),
         moves: []
@@ -35,13 +31,8 @@ class OpeningDriller extends Component<{}, OpeningDrillerState> {
 
 
     componentDidMount() {
-        this.ecoLoader.loadMap().then((openings) => {
-            this.openingNodes = openings.rootNodes
-            this.openingNodesIdMap = openings.idToNodeMap
-            this.setState({ treeLoading: false})
-        });
         this.ecoLoader.initialize().then(() => {
-                this.setState({initLoading: false}, this.moveForWhite)
+            this.setState({initLoading: false}, this.moveForWhite)
             });
     }
 
@@ -113,7 +104,7 @@ class OpeningDriller extends Component<{}, OpeningDrillerState> {
     }
 
     render() {
-        if (this.state.treeLoading || this.state.initLoading) return <h2>Loading...</h2>;
+        if (this.state.initLoading) return <h2>Loading...</h2>;
         return (
             <div className='sideBySide'>
                 <Chessground
