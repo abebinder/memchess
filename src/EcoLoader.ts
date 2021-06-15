@@ -1,7 +1,6 @@
-
 import {ShortMove, Square} from "chess.js";
 import * as d3 from "d3";
-import { DSVRowString } from "d3";
+import {DSVRowString} from "d3";
 
 
 export interface Opening {
@@ -10,7 +9,7 @@ export interface Opening {
 }
 
 export interface OpeningNode{
-    children?: OpeningNode[],
+    children: OpeningNode[],
     id: string,
     name: string,
     moves: ShortMove[]
@@ -35,6 +34,7 @@ export class EcoLoader{
         let idToNodeMap = new Map<string, OpeningNode>();
         for (const opening of openingList) {
             let node: OpeningNode = {
+                children: [],
                 id: this.unravel(opening.moves),
                 moves: opening.moves,
                 name: opening.name
@@ -45,34 +45,23 @@ export class EcoLoader{
     }
 
     private async createRootNodes(idToNodeMap: Map<string, OpeningNode>) {
-       let openingNodes = idToNodeMap.values();
         let openingNodeChildMap = new Map<string, OpeningNode>();
         let rootNodes: OpeningNode[] = []
-        for (const node of openingNodes) {
-            var addToMap = true;
+        for (const node of idToNodeMap.values()) {
+            var shouldAddToChildMap = true;
             for (let i = node.moves.length-1; i>-1; i--) {
-                if(i==0) {
-                    rootNodes.push(node)
-                    break;
-                }
+                if(i==0) { rootNodes.push(node) }
                 const possibleParent = openingNodeChildMap.get(this.unravel(node.moves.slice(0, i)))
                 if(possibleParent){
                     if(possibleParent.name === node.name){
-                        addToMap = false;
+                        shouldAddToChildMap = false;
                         break;
                     }
-                    if(possibleParent.children) {
-                        possibleParent.children.push(node)}
-                    else{
-                        possibleParent.children = [node]
-                    }
+                    possibleParent.children.push(node)
                     break;
                 }
-
             }
-            if (addToMap) {
-                openingNodeChildMap.set(this.unravel(node.moves), node)
-            }
+            if (shouldAddToChildMap) { openingNodeChildMap.set(this.unravel(node.moves), node) }
         }
         this.sortNodeList(rootNodes)
         return rootNodes;
