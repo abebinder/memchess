@@ -35,7 +35,7 @@ export class EcoLoader{
         for (const opening of openingList) {
             let node: OpeningNode = {
                 children: [],
-                id: this.unravel(opening.moves),
+                id: this.stringify(opening.moves),
                 moves: opening.moves,
                 name: opening.name
             }
@@ -45,22 +45,21 @@ export class EcoLoader{
     }
 
     private async createRootNodes(idToNodeMap: Map<string, OpeningNode>) {
-        let openingNodeChildMap = new Map<string, OpeningNode>();
+        let openingStringToNodeMap = new Map<string, OpeningNode>();
         let rootNodes: OpeningNode[] = []
         for (const node of idToNodeMap.values()) {
-            var shouldAddToChildMap = true;
+            var shouldAddToStringToNodeMap = true;
             for (let i = node.moves.length-1; i>-1; i--) {
                 if(i==0) { rootNodes.push(node) }
-                const possibleParent = openingNodeChildMap.get(this.unravel(node.moves.slice(0, i)))
+                const possibleParent = openingStringToNodeMap.get(this.stringify(node.moves.slice(0, i)))
                 if(possibleParent){
-                    possibleParent.name === node.name ? shouldAddToChildMap = false : possibleParent.children.push(node)
+                    possibleParent.name === node.name ? shouldAddToStringToNodeMap = false : possibleParent.children.push(node)
                     break;
                 }
             }
-            if (shouldAddToChildMap) { openingNodeChildMap.set(this.unravel(node.moves), node) }
+            if (shouldAddToStringToNodeMap) { openingStringToNodeMap.set(this.stringify(node.moves), node) }
         }
-        this.sortNodeList(rootNodes)
-        return rootNodes;
+        return this.sortNodeList(rootNodes)
     }
 
 
@@ -93,7 +92,7 @@ export class EcoLoader{
         })
     }
 
-    unravel(arr: ShortMove[]){
+    stringify(arr: ShortMove[]){
         let unraveled = ""
         for (const shortMove of arr) {
             unraveled = unraveled + shortMove.from + shortMove.to
@@ -108,6 +107,7 @@ export class EcoLoader{
         for (const openingNode of arr) {
             if(openingNode.children) this.sortNodeList(openingNode.children)
         }
+        return arr;
     }
 
 }
