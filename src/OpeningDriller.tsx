@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import Chessground from "react-chessground"
 import "react-chessground/dist/styles/chessground.css"
 import * as ChessJS from "chess.js"
-import {ChessInstance} from "chess.js"
+import {ChessInstance, ShortMove} from "chess.js"
 import {EcoLoader, OpeningNode} from "./EcoLoader";
 import * as Mover from "./Mover"
 import './OpeningDriller.css'
@@ -14,8 +14,10 @@ const Chess = typeof ChessJS === "function" ? ChessJS : ChessJS.Chess;
 interface OpeningDrillerState {
     orientation: string,
     treeLoading: boolean,
+    initLoading: boolean
     game: ChessInstance
     activeId: string
+    activeMoves: ShortMove[]
 }
 
 class OpeningDriller extends Component<{}, OpeningDrillerState> {
@@ -27,8 +29,10 @@ class OpeningDriller extends Component<{}, OpeningDrillerState> {
     state = {
         orientation: "white",
         treeLoading: true,
+        initLoading: true,
         game: new Chess(),
-        activeId: ""
+        activeId: "",
+        activeMoves: []
     };
 
 
@@ -39,6 +43,10 @@ class OpeningDriller extends Component<{}, OpeningDrillerState> {
             this.setState({activeId: Array.from(this.openingNodesIdMap.keys())[0], treeLoading: false},
                 this.moveForWhite)
         })
+        this.ecoLoader.initialize().then(() => {
+                this.setState({initLoading: false})
+            }
+        );
     }
 
     onDrop = (sourceSquare, targetSquare) => {
@@ -93,8 +101,13 @@ class OpeningDriller extends Component<{}, OpeningDrillerState> {
         }, this.moveForWhite);
     }
 
+    newCallback = (moves) => {
+        this.setState({activeMoves : moves}, this.moveForWhite);
+    }
+
     render() {
-        if (this.state.treeLoading) return <h2>Loading...</h2>;
+        console.log(this.state.activeMoves)
+        if (this.state.treeLoading || this.state.initLoading) return <h2>Loading...</h2>;
         var arrow = []
         if (this.state.game.history().length < this.openingNodesIdMap.get(this.state.activeId).moves.length) {
             arrow = [
@@ -121,6 +134,8 @@ class OpeningDriller extends Component<{}, OpeningDrillerState> {
                 <OpeningTree
                     data={this.openingNodes}
                     invokerClickCallback={this.treeCallback}
+                    newCallback={this.newCallback}
+                    ecoLoader={this.ecoLoader}
                 />
                 <Button onClick={this.switchColor}>Switch Color</Button>
             </div>

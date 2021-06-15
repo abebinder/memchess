@@ -86,7 +86,7 @@ export class EcoLoader{
         let rootNodes: OpeningNode[] = []
         for (const opening of openingList) {
             let node: OpeningNode  = {
-                id: uuidv4(),
+                id: this.unravel(opening.moves),
                 moves: opening.moves,
                 name: opening.name
             }

@@ -3,12 +3,14 @@ import './OpeningTree.css'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import TreeView from '@material-ui/lab/TreeView';
-import {OpeningNode} from "./EcoLoader";
+import {EcoLoader, OpeningNode} from "./EcoLoader";
 import {TreeItem} from "@material-ui/lab";
 
 export interface OpeningTreeProps{
     data: OpeningNode[],
     invokerClickCallback: any,
+    newCallback: any,
+    ecoLoader: EcoLoader
 }
 
 interface OpeningTreeState{
@@ -30,6 +32,9 @@ export class OpeningTree extends React.Component<OpeningTreeProps, OpeningTreeSt
         }
         this.setState({selected: value, expanded: expanded})
         this.props.invokerClickCallback(event,value)
+        console.log(value)
+        console.log(this.props.ecoLoader.idToNodeMap)
+        this.props.newCallback(this.props.ecoLoader.idToNodeMap.get(value).moves)
     }
 
     renderOpeningNode(openingNode: OpeningNode) {
