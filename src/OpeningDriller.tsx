@@ -17,7 +17,7 @@ interface OpeningDrillerState {
     initLoading: boolean
     game: ChessInstance
     activeId: string
-    activeMoves: ShortMove[]
+    moves: ShortMove[]
 }
 
 class OpeningDriller extends Component<{}, OpeningDrillerState> {
@@ -32,7 +32,7 @@ class OpeningDriller extends Component<{}, OpeningDrillerState> {
         initLoading: true,
         game: new Chess(),
         activeId: "",
-        activeMoves: []
+        moves: []
     };
 
 
@@ -51,7 +51,7 @@ class OpeningDriller extends Component<{}, OpeningDrillerState> {
 
     onDrop = (sourceSquare, targetSquare) => {
         const playermove = Mover.move({
-            move: this.openingNodesIdMap.get(this.state.activeId).moves[this.state.game.history().length],
+            move: this.state.moves[this.state.game.history().length],
             game: this.state.game,
             expectedSourceSquare: sourceSquare,
             expectedTargetSquare: targetSquare
@@ -66,7 +66,7 @@ class OpeningDriller extends Component<{}, OpeningDrillerState> {
             return
         }
         const response = Mover.move({
-            move: this.openingNodesIdMap.get(this.state.activeId).moves[this.state.game.history().length],
+            move: this.state.moves[this.state.game.history().length],
             game: this.state.game
         })
         if (!response) {
@@ -85,7 +85,7 @@ class OpeningDriller extends Component<{}, OpeningDrillerState> {
     }
 
     resetIfEnd() {
-        if (this.state.game.history().length < this.openingNodesIdMap.get(this.state.activeId).moves.length) {
+        if (this.state.game.history().length < this.state.moves.length) {
             return false;
         }
         setTimeout(() => {
@@ -102,18 +102,18 @@ class OpeningDriller extends Component<{}, OpeningDrillerState> {
     }
 
     newCallback = (moves) => {
-        this.setState({activeMoves : moves}, this.moveForWhite);
+        this.setState({moves : moves}, this.moveForWhite);
     }
 
     render() {
-        console.log(this.state.activeMoves)
+        console.log(this.state.moves)
         if (this.state.treeLoading || this.state.initLoading) return <h2>Loading...</h2>;
         var arrow = []
-        if (this.state.game.history().length < this.openingNodesIdMap.get(this.state.activeId).moves.length) {
+        if (this.state.game.history().length < this.state.moves.length) {
             arrow = [
                 {
-                    orig: this.openingNodesIdMap.get(this.state.activeId).moves[this.state.game.history().length].from,
-                    dest: this.openingNodesIdMap.get(this.state.activeId).moves[this.state.game.history().length].to,
+                    orig: this.state.moves[this.state.game.history().length].from,
+                    dest: this.state.moves[this.state.game.history().length].to,
                     brush: 'green'
                 }
             ]
@@ -145,7 +145,7 @@ class OpeningDriller extends Component<{}, OpeningDrillerState> {
     private moveForWhite() {
         if (this.state.orientation === 'black') {
             Mover.move({
-                move: this.openingNodesIdMap.get(this.state.activeId).moves[this.state.game.history().length],
+                move: this.state.moves[this.state.game.history().length],
                 game: this.state.game
             })
             this.setState({game: this.state.game});
