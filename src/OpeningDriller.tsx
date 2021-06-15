@@ -40,13 +40,11 @@ class OpeningDriller extends Component<{}, OpeningDrillerState> {
         this.ecoLoader.loadMap().then((openings) => {
             this.openingNodes = openings.rootNodes
             this.openingNodesIdMap = openings.idToNodeMap
-            this.setState({activeId: Array.from(this.openingNodesIdMap.keys())[0], treeLoading: false},
-                this.moveForWhite)
-        })
+            this.setState({ treeLoading: false})
+        });
         this.ecoLoader.initialize().then(() => {
-                this.setState({initLoading: false})
-            }
-        );
+                this.setState({initLoading: false}, this.moveForWhite)
+            });
     }
 
     onDrop = (sourceSquare, targetSquare) => {
