@@ -53,11 +53,7 @@ export class EcoLoader{
                 if(i==0) { rootNodes.push(node) }
                 const possibleParent = openingNodeChildMap.get(this.unravel(node.moves.slice(0, i)))
                 if(possibleParent){
-                    if(possibleParent.name === node.name){
-                        shouldAddToChildMap = false;
-                        break;
-                    }
-                    possibleParent.children.push(node)
+                    possibleParent.name === node.name ? shouldAddToChildMap = false : possibleParent.children.push(node)
                     break;
                 }
             }
