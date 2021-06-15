@@ -16,7 +16,6 @@ interface OpeningDrillerState {
     treeLoading: boolean,
     initLoading: boolean
     game: ChessInstance
-    activeId: string
     moves: ShortMove[]
 }
 
@@ -31,7 +30,6 @@ class OpeningDriller extends Component<{}, OpeningDrillerState> {
         treeLoading: true,
         initLoading: true,
         game: new Chess(),
-        activeId: "",
         moves: []
     };
 
@@ -92,14 +90,6 @@ class OpeningDriller extends Component<{}, OpeningDrillerState> {
         return true;
     }
 
-    treeCallback = (event, value) => {
-        this.setState({
-            activeId: value,
-            game: new Chess()
-        },
-            this.moveForWhite);
-    }
-
     newCallback = (moves) => {
         this.setState({
             moves : moves,
@@ -108,9 +98,7 @@ class OpeningDriller extends Component<{}, OpeningDrillerState> {
             this.moveForWhite);
     }
 
-    render() {
-        console.log(this.state.moves)
-        if (this.state.treeLoading || this.state.initLoading) return <h2>Loading...</h2>;
+    drawArrow(){
         var arrow = []
         if (this.state.game.history().length < this.state.moves.length) {
             arrow = [
@@ -121,6 +109,11 @@ class OpeningDriller extends Component<{}, OpeningDrillerState> {
                 }
             ]
         }
+        return arrow;
+    }
+
+    render() {
+        if (this.state.treeLoading || this.state.initLoading) return <h2>Loading...</h2>;
         return (
             <div className='sideBySide'>
                 <Chessground
@@ -130,7 +123,7 @@ class OpeningDriller extends Component<{}, OpeningDrillerState> {
                     drawable={
                         {
                             enabled: false,
-                            autoShapes: arrow
+                            autoShapes: this.drawArrow()
                         }
                     }
                 />
