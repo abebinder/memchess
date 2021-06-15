@@ -8,7 +8,6 @@ import {TreeItem} from "@material-ui/lab";
 
 export interface OpeningTreeProps{
     data: OpeningNode[],
-    invokerClickCallback: any,
     newCallback: any,
     ecoLoader: EcoLoader
 }
@@ -31,9 +30,6 @@ export class OpeningTree extends React.Component<OpeningTreeProps, OpeningTreeSt
             index > -1 ? expanded.splice(index, 1) : expanded.push(value);
         }
         this.setState({selected: value, expanded: expanded})
-        this.props.invokerClickCallback(event,value)
-        console.log(value)
-        console.log(this.props.ecoLoader.idToNodeMap)
         this.props.newCallback(this.props.ecoLoader.idToNodeMap.get(value).moves)
     }
 

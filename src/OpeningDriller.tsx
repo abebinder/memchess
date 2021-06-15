@@ -96,11 +96,16 @@ class OpeningDriller extends Component<{}, OpeningDrillerState> {
         this.setState({
             activeId: value,
             game: new Chess()
-        }, this.moveForWhite);
+        },
+            this.moveForWhite);
     }
 
     newCallback = (moves) => {
-        this.setState({moves : moves}, this.moveForWhite);
+        this.setState({
+            moves : moves,
+            game: new Chess()
+        },
+            this.moveForWhite);
     }
 
     render() {
@@ -131,7 +136,6 @@ class OpeningDriller extends Component<{}, OpeningDrillerState> {
                 />
                 <OpeningTree
                     data={this.openingNodes}
-                    invokerClickCallback={this.treeCallback}
                     newCallback={this.newCallback}
                     ecoLoader={this.ecoLoader}
                 />
