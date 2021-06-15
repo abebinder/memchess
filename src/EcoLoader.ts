@@ -48,16 +48,16 @@ export class EcoLoader{
         let openingStringToNodeMap = new Map<string, OpeningNode>();
         let rootNodes: OpeningNode[] = []
         for (const node of idToNodeMap.values()) {
-            var shouldAddToStringToNodeMap = true;
+            var isDuplicateName = false;
             for (let i = node.moves.length-1; i>-1; i--) {
                 if(i==0) { rootNodes.push(node) }
                 const possibleParent = openingStringToNodeMap.get(this.stringify(node.moves.slice(0, i)))
                 if(possibleParent){
-                    possibleParent.name === node.name ? shouldAddToStringToNodeMap = false : possibleParent.children.push(node)
+                    possibleParent.name === node.name ? isDuplicateName = true : possibleParent.children.push(node)
                     break;
                 }
             }
-            if (shouldAddToStringToNodeMap) { openingStringToNodeMap.set(this.stringify(node.moves), node) }
+            if (!isDuplicateName) { openingStringToNodeMap.set(this.stringify(node.moves), node) }
         }
         return this.sortNodeList(rootNodes)
     }
