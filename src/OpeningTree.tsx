@@ -7,7 +7,6 @@ import {EcoLoader, OpeningNode} from "./EcoLoader";
 import {TreeItem} from "@material-ui/lab";
 
 export interface OpeningTreeProps{
-    data: OpeningNode[],
     newCallback: any,
     ecoLoader: EcoLoader
 }
@@ -57,7 +56,7 @@ export class OpeningTree extends React.Component<OpeningTreeProps, OpeningTreeSt
                 defaultExpandIcon={<ChevronRightIcon />}
                 onNodeSelect = {this.localClickCallback}
             >
-                {this.renderListOfOpeningNodes(this.props.data)}
+                {this.renderListOfOpeningNodes(this.props.ecoLoader.rootNodes)}
             </TreeView>
         );
     }

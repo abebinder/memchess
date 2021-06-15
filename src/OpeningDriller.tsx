@@ -128,7 +128,6 @@ class OpeningDriller extends Component<{}, OpeningDrillerState> {
                     }
                 />
                 <OpeningTree
-                    data={this.openingNodes}
                     newCallback={this.newCallback}
                     ecoLoader={this.ecoLoader}
                 />
