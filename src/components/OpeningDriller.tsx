@@ -3,9 +3,9 @@ import Chessground from "react-chessground"
 import "react-chessground/dist/styles/chessground.css"
 import * as ChessJS from "chess.js"
 import {ChessInstance, ShortMove} from "chess.js"
-import {EcoLoader, OpeningNode} from "./EcoLoader";
-import * as Mover from "./Mover"
-import './OpeningDriller.css'
+import {EcoLoader, OpeningNode} from "../helpers/EcoLoader";
+import * as Mover from "../helpers/Mover"
+import '../css/OpeningDriller.css'
 import {OpeningTree} from "./OpeningTree";
 import {Button} from "@material-ui/core";
 

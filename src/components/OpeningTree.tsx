@@ -1,9 +1,9 @@
 import React from 'react';
-import './OpeningTree.css'
+import '../css/OpeningTree.css'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import TreeView from '@material-ui/lab/TreeView';
-import {EcoLoader, OpeningNode} from "./EcoLoader";
+import {EcoLoader, OpeningNode} from "../helpers/EcoLoader";
 import {TreeItem} from "@material-ui/lab";
 
 export interface OpeningTreeProps{
