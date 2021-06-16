@@ -1,17 +1,9 @@
-
 import {ShortMove, Square} from "chess.js";
 import * as d3 from "d3";
-import { DSVRowString } from "d3";
-import { v4 as uuidv4 } from 'uuid';
-
-
-export interface Opening {
-    name: string,
-    moves: ShortMove[]
-}
+import {DSVRowString} from "d3";
 
 export interface OpeningNode{
-    children?: OpeningNode[],
+    children: OpeningNode[],
     id: string,
     name: string,
     moves: ShortMove[]
@@ -20,6 +12,42 @@ export interface OpeningNode{
 export class EcoLoader{
 
     prefixes: string[] = ['a', 'b', 'c', 'd', 'e']
+    idToNodeMap: Map<string, OpeningNode> = new Map<string, OpeningNode>()
+    rootNodes: OpeningNode[] = []
+
+
+    public async initialize(){
+        this.idToNodeMap = await this.createIdToNodeMap();
+        this.rootNodes = await this.createRootNodes(this.idToNodeMap);
+    }
+
+    private async createIdToNodeMap() {
+        let idToNodeMap = new Map<string, OpeningNode>();
+        let openingList = await this.createOpeningList();
+        for (const opening of openingList) {
+            idToNodeMap.set(opening.id, opening)
+        }
+        return idToNodeMap
+    }
+
+    private async createRootNodes(idToNodeMap: Map<string, OpeningNode>) {
+        let openingStringToNodeMap = new Map<string, OpeningNode>();
+        let rootNodes: OpeningNode[] = []
+        for (const node of idToNodeMap.values()) {
+            var isDuplicateName = false;
+            for (let i = node.moves.length-1; i>-1; i--) {
+                if(i==0) { rootNodes.push(node) }
+                const possibleParent = openingStringToNodeMap.get(this.stringify(node.moves.slice(0, i)))
+                if(possibleParent){
+                    possibleParent.name === node.name ? isDuplicateName = true : possibleParent.children.push(node)
+                    break;
+                }
+            }
+            if (!isDuplicateName) { openingStringToNodeMap.set(this.stringify(node.moves), node) }
+        }
+        return this.sortNodeList(rootNodes)
+    }
+
 
     createShortMoves(data: DSVRowString): ShortMove[] {
         var movesAsSpaceSeperatedString = data["moves"] as string;
@@ -33,56 +61,18 @@ export class EcoLoader{
     }
 
 
-    public async loadMap() {
-        let openingList = await this.createOpeningList();
-        let openingNodeChildMap = new Map<string, OpeningNode>();
-        let idToNodeMap = new Map<string, OpeningNode>();
-        let rootNodes: OpeningNode[] = []
-        for (const opening of openingList) {
-            let node: OpeningNode  = {
-                id: uuidv4(),
-                moves: opening.moves,
-                name: opening.name
-            }
-            idToNodeMap.set(node.id, node)
-            var addToMap = true;
-            for (let i = opening.moves.length-1; i>-1; i--) {
-                if(i==0) {
-                    rootNodes.push(node)
-                    break;
-                }
-                const possibleParent = openingNodeChildMap.get(this.unravel(opening.moves.slice(0, i)))
-                if(possibleParent){
-                    if(possibleParent.name === node.name){
-                        addToMap = false;
-                        break;
-                    }
-                   if(possibleParent.children) {
-                       possibleParent.children.push(node)}
-                   else{
-                       possibleParent.children = [node]
-                   }
-                   break;
-                }
-
-            }
-            if (addToMap) {
-                openingNodeChildMap.set(this.unravel(opening.moves), node)
-            }
-        }
-        this.sortNodeList(rootNodes)
-        return {idToNodeMap: idToNodeMap, rootNodes: rootNodes};
-    }
-
 
     private async createOpeningList() {
-        let openingList: Opening[] = []
+        let openingList: OpeningNode[] = []
         for (const prefix of this.prefixes) {
             const data = await d3.tsv(`https://raw.githubusercontent.com/niklasf/eco/master/${prefix}.tsv`);
             for (const elem of data) {
+                const moves = this.createShortMoves(elem)
                 openingList.push({
                     name: elem["name"],
-                    moves: this.createShortMoves(elem)
+                    children: [],
+                    id: this.stringify(moves),
+                    moves: moves
                 })
             }
         }
@@ -91,7 +81,7 @@ export class EcoLoader{
         })
     }
 
-    unravel(arr: ShortMove[]){
+    stringify(arr: ShortMove[]){
         let unraveled = ""
         for (const shortMove of arr) {
             unraveled = unraveled + shortMove.from + shortMove.to
@@ -106,7 +96,7 @@ export class EcoLoader{
         for (const openingNode of arr) {
             if(openingNode.children) this.sortNodeList(openingNode.children)
         }
+        return arr;
     }
-
 
 }

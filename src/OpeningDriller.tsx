@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import Chessground from "react-chessground"
 import "react-chessground/dist/styles/chessground.css"
 import * as ChessJS from "chess.js"
-import {ChessInstance} from "chess.js"
+import {ChessInstance, ShortMove} from "chess.js"
 import {EcoLoader, OpeningNode} from "./EcoLoader";
 import * as Mover from "./Mover"
 import './OpeningDriller.css'
@@ -13,37 +13,32 @@ const Chess = typeof ChessJS === "function" ? ChessJS : ChessJS.Chess;
 
 interface OpeningDrillerState {
     orientation: string,
-    treeLoading: boolean,
-    game: ChessInstance
-    activeId: string
+    loading: boolean,
+    game: ChessInstance,
+    moves: ShortMove[]
 }
 
 class OpeningDriller extends Component<{}, OpeningDrillerState> {
 
     ecoLoader: EcoLoader = new EcoLoader();
-    openingNodes: OpeningNode[]
-    openingNodesIdMap: Map<string, OpeningNode>
 
     state = {
         orientation: "white",
-        treeLoading: true,
+        loading: true,
         game: new Chess(),
-        activeId: ""
+        moves: []
     };
 
 
     componentDidMount() {
-        this.ecoLoader.loadMap().then((openings) => {
-            this.openingNodes = openings.rootNodes
-            this.openingNodesIdMap = openings.idToNodeMap
-            this.setState({activeId: Array.from(this.openingNodesIdMap.keys())[0], treeLoading: false},
-                this.moveForWhite)
-        })
+        this.ecoLoader.initialize().then(() => {
+            this.setState({loading: false}, this.moveForWhite)
+            });
     }
 
     onDrop = (sourceSquare, targetSquare) => {
         const playermove = Mover.move({
-            move: this.openingNodesIdMap.get(this.state.activeId).moves[this.state.game.history().length],
+            move: this.state.moves[this.state.game.history().length],
             game: this.state.game,
             expectedSourceSquare: sourceSquare,
             expectedTargetSquare: targetSquare
@@ -58,7 +53,7 @@ class OpeningDriller extends Component<{}, OpeningDrillerState> {
             return
         }
         const response = Mover.move({
-            move: this.openingNodesIdMap.get(this.state.activeId).moves[this.state.game.history().length],
+            move: this.state.moves[this.state.game.history().length],
             game: this.state.game
         })
         if (!response) {
@@ -77,7 +72,7 @@ class OpeningDriller extends Component<{}, OpeningDrillerState> {
     }
 
     resetIfEnd() {
-        if (this.state.game.history().length < this.openingNodesIdMap.get(this.state.activeId).moves.length) {
+        if (this.state.game.history().length < this.state.moves.length) {
             return false;
         }
         setTimeout(() => {
@@ -86,25 +81,41 @@ class OpeningDriller extends Component<{}, OpeningDrillerState> {
         return true;
     }
 
-    treeCallback = (event, value) => {
-        this.setState({
-            activeId: value,
-            game: new Chess()
-        }, this.moveForWhite);
+    private moveForWhite() {
+        if (this.state.orientation === 'black') {
+            Mover.move({
+                move: this.state.moves[this.state.game.history().length],
+                game: this.state.game
+            })
+            this.setState({game: this.state.game});
+        }
     }
 
-    render() {
-        if (this.state.treeLoading) return <h2>Loading...</h2>;
+
+    changeMoves = (moves) => {
+        this.setState({
+            moves : moves,
+            game: new Chess()
+        },
+            this.moveForWhite);
+    }
+
+    drawArrow(){
         var arrow = []
-        if (this.state.game.history().length < this.openingNodesIdMap.get(this.state.activeId).moves.length) {
+        if (this.state.game.history().length < this.state.moves.length) {
             arrow = [
                 {
-                    orig: this.openingNodesIdMap.get(this.state.activeId).moves[this.state.game.history().length].from,
-                    dest: this.openingNodesIdMap.get(this.state.activeId).moves[this.state.game.history().length].to,
+                    orig: this.state.moves[this.state.game.history().length].from,
+                    dest: this.state.moves[this.state.game.history().length].to,
                     brush: 'green'
                 }
             ]
         }
+        return arrow;
+    }
+
+    render() {
+        if (this.state.loading) return <h2>Loading...</h2>;
         return (
             <div className='sideBySide'>
                 <Chessground
@@ -114,27 +125,17 @@ class OpeningDriller extends Component<{}, OpeningDrillerState> {
                     drawable={
                         {
                             enabled: false,
-                            autoShapes: arrow
+                            autoShapes: this.drawArrow()
                         }
                     }
                 />
                 <OpeningTree
-                    data={this.openingNodes}
-                    invokerClickCallback={this.treeCallback}
+                    onClickCallback={this.changeMoves}
+                    ecoLoader={this.ecoLoader}
                 />
                 <Button onClick={this.switchColor}>Switch Color</Button>
             </div>
         )
-    }
-
-    private moveForWhite() {
-        if (this.state.orientation === 'black') {
-            Mover.move({
-                move: this.openingNodesIdMap.get(this.state.activeId).moves[this.state.game.history().length],
-                game: this.state.game
-            })
-            this.setState({game: this.state.game});
-        }
     }
 }
 
