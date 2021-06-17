@@ -34,7 +34,7 @@ export class OpeningTree extends React.Component<OpeningTreeProps, OpeningTreeSt
 
     renderOpeningNode(openingNode: OpeningNode) {
         return <TreeItem key={openingNode.id} nodeId={openingNode.id} label={openingNode.name}>
-            {Array.isArray(openingNode.children) ? openingNode.children.map((node) => this.renderOpeningNode(node)) : null}
+            { openingNode.children.map((node) => this.renderOpeningNode(node)) }
         </TreeItem>
     }
 
