@@ -3,15 +3,16 @@ import Chessground from "react-chessground"
 import "react-chessground/dist/styles/chessground.css"
 import * as ChessJS from "chess.js"
 import {ChessInstance, ShortMove} from "chess.js"
-import {EcoLoader, OpeningNode} from "../helpers/EcoLoader";
+import {EcoLoader} from "../helpers/EcoLoader";
 import * as Mover from "../helpers/Mover"
 import '../css/OpeningDriller.css'
 import {OpeningTree} from "./OpeningTree";
 import {Button} from "@material-ui/core";
+import {drawArrow} from "../helpers/Drawer";
 
 const Chess = typeof ChessJS === "function" ? ChessJS : ChessJS.Chess;
 
-interface OpeningDrillerState {
+export interface OpeningDrillerState {
     orientation: string,
     loading: boolean,
     game: ChessInstance,
@@ -32,43 +33,42 @@ class OpeningDriller extends Component<{}, OpeningDrillerState> {
 
     componentDidMount() {
         this.ecoLoader.initialize().then(() => {
-            this.setState({loading: false}, this.moveForWhite)
-            });
+            this.setState({loading: false}, () => this.computerMove(true))
+        });
     }
 
     onDrop = (sourceSquare, targetSquare) => {
         const playermove = Mover.move({
             move: this.state.moves[this.state.game.history().length],
             game: this.state.game,
+            callback: (game) => {this.setState({game: game});},
             expectedSourceSquare: sourceSquare,
             expectedTargetSquare: targetSquare
         })
-        if (!playermove) {
-            this.forceUpdate()
-            return
-        }
-        this.setState({game: this.state.game});
-        if (this.resetIfEnd()) {
-            this.forceUpdate()
-            return
-        }
-        const response = Mover.move({
-            move: this.state.moves[this.state.game.history().length],
-            game: this.state.game
-        })
-        if (!response) {
-            this.forceUpdate()
-            return;
-        }
-        this.setState({game: this.state.game}, this.resetIfEnd);
+        if (!playermove || this.resetIfEnd()) { return }
+        this.computerMove(false)
     };
+
+    computerMove(firstmove: boolean){
+        //needed to draw first arrow when switching from black to white
+        if(firstmove) { this.forceUpdate() }
+
+        if(!firstmove || this.state.orientation === "black") {
+            Mover.move({
+                move: this.state.moves[this.state.game.history().length],
+                game: this.state.game,
+                callback: (game) => {this.setState({game: game})}
+            })
+        }
+        if(!firstmove) { this.resetIfEnd() }
+    }
 
     switchColor = () => {
         var newOrientation = "white";
         if (this.state.orientation === "white") {
             newOrientation = "black"
         }
-        this.setState({orientation: newOrientation, game: new Chess()}, this.moveForWhite);
+        this.setState({orientation: newOrientation, game: new Chess()}, () => this.computerMove(true));
     }
 
     resetIfEnd() {
@@ -76,42 +76,16 @@ class OpeningDriller extends Component<{}, OpeningDrillerState> {
             return false;
         }
         setTimeout(() => {
-            this.setState({game: new Chess()}, this.moveForWhite);
+            this.setState({game: new Chess()}, () => this.computerMove(true));
         }, 1000);
         return true;
     }
-
-    private moveForWhite() {
-        if (this.state.orientation === 'black') {
-            Mover.move({
-                move: this.state.moves[this.state.game.history().length],
-                game: this.state.game
-            })
-            this.setState({game: this.state.game});
-        }
-    }
-
 
     changeMoves = (moves) => {
         this.setState({
             moves : moves,
             game: new Chess()
-        },
-            this.moveForWhite);
-    }
-
-    drawArrow(){
-        var arrow = []
-        if (this.state.game.history().length < this.state.moves.length) {
-            arrow = [
-                {
-                    orig: this.state.moves[this.state.game.history().length].from,
-                    dest: this.state.moves[this.state.game.history().length].to,
-                    brush: 'green'
-                }
-            ]
-        }
-        return arrow;
+        }, () => this.computerMove(true));
     }
 
     render() {
@@ -122,12 +96,7 @@ class OpeningDriller extends Component<{}, OpeningDrillerState> {
                     fen={this.state.game.fen()}
                     onMove={this.onDrop}
                     orientation={this.state.orientation}
-                    drawable={
-                        {
-                            enabled: false,
-                            autoShapes: this.drawArrow()
-                        }
-                    }
+                    drawable={ drawArrow(this.state) }
                 />
                 <OpeningTree
                     onClickCallback={this.changeMoves}
