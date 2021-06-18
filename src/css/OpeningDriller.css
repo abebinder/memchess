@@ -22,3 +22,7 @@
     display: block;
     margin: auto;
 }
+
+.cg-custom-svgs{
+ height: 0% !important;
+}
