@@ -3,9 +3,9 @@ import * as d3 from "d3";
 import {DSVRowString} from "d3";
 
 export interface OpeningNode{
-    children: OpeningNode[],
+    items: OpeningNode[],
     id: string,
-    name: string,
+    text: string,
     moves: ShortMove[]
 }
 
@@ -39,7 +39,7 @@ export class EcoLoader{
                 if(i==0) { rootNodes.push(node) }
                 const possibleParent = openingStringToNodeMap.get(this.stringify(node.moves.slice(0, i)))
                 if(possibleParent){
-                    possibleParent.name === node.name ? isDuplicateName = true : possibleParent.children.push(node)
+                    possibleParent.text === node.text ? isDuplicateName = true : possibleParent.items.push(node)
                     break;
                 }
             }
@@ -69,15 +69,15 @@ export class EcoLoader{
             for (const elem of data) {
                 const moves = this.createShortMoves(elem)
                 openingList.push({
-                    name: elem["name"],
-                    children: [],
+                    text: elem["name"],
+                    items: [],
                     id: this.stringify(moves),
                     moves: moves
                 })
             }
         }
         return openingList.sort((a, b) => {
-            return a.moves.length - b.moves.length || a.name.localeCompare(b.name)
+            return a.moves.length - b.moves.length || a.text.localeCompare(b.text)
         })
     }
 
@@ -91,10 +91,10 @@ export class EcoLoader{
 
     sortNodeList(arr: OpeningNode[]){
         arr.sort((a, b) => {
-            return a.name.localeCompare(b.name)
+            return a.text.localeCompare(b.text)
         })
         for (const openingNode of arr) {
-            if(openingNode.children) this.sortNodeList(openingNode.children)
+            if(openingNode.items) this.sortNodeList(openingNode.items)
         }
         return arr;
     }
