@@ -7,8 +7,8 @@ import {EcoLoader} from "../helpers/EcoLoader";
 import * as Mover from "../helpers/Mover"
 import '../css/OpeningDriller.css'
 import {OpeningTree} from "./OpeningTree";
-import {Button} from "@material-ui/core";
 import {drawArrow} from "../helpers/Drawer";
+import {ControlPanel} from "./ControlPanel";
 
 const Chess = typeof ChessJS === "function" ? ChessJS : ChessJS.Chess;
 
@@ -16,7 +16,8 @@ export interface OpeningDrillerState {
     orientation: string,
     loading: boolean,
     game: ChessInstance,
-    moves: ShortMove[]
+    moves: ShortMove[],
+    shouldDraw: boolean
 }
 
 class OpeningDriller extends Component<{}, OpeningDrillerState> {
@@ -27,7 +28,8 @@ class OpeningDriller extends Component<{}, OpeningDrillerState> {
         orientation: "white",
         loading: true,
         game: new Chess(),
-        moves: []
+        moves: [],
+        shouldDraw: true
     };
 
 
@@ -88,6 +90,7 @@ class OpeningDriller extends Component<{}, OpeningDrillerState> {
         }, () => this.computerMove(true));
     }
 
+
     render() {
         if (this.state.loading) return <h2>Loading...</h2>;
         return (
@@ -102,7 +105,10 @@ class OpeningDriller extends Component<{}, OpeningDrillerState> {
                     onClickCallback={this.changeMoves}
                     ecoLoader={this.ecoLoader}
                 />
-                <Button onClick={this.switchColor}>Switch Color</Button>
+                <ControlPanel
+                    switchColorsCallback={this.switchColor}
+                    toggleArrowsCallback={() => this.setState({shouldDraw: !this.state.shouldDraw})}
+                />
             </div>
         )
     }

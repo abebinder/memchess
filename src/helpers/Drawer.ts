@@ -5,7 +5,7 @@ export function drawArrow(input: OpeningDrillerState)  {
 
     var arrow = []
 
-    if (input.game.history().length < input.moves.length) {
+    if (input.game.history().length < input.moves.length && input.shouldDraw) {
         arrow = [
             {
                 orig: input.moves[input.game.history().length].from,
