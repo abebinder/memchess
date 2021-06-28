@@ -1,4 +1,3 @@
-
 # [memchess.org](https://memchess.org)
 
 # About
