@@ -35,7 +35,8 @@ class OpeningDriller extends Component<{}, OpeningDrillerState> {
 
     componentDidMount() {
         this.ecoLoader.initialize().then(() => {
-            this.setState({loading: false}, () => this.computerMove(true))
+            this.setState({loading: false, moves: this.ecoLoader.rootNodes[0].moves},
+                () => this.computerMove(true))
         });
     }
 

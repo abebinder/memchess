@@ -6,7 +6,8 @@ export interface OpeningNode{
     items: OpeningNode[],
     id: string,
     text: string,
-    moves: ShortMove[]
+    moves: ShortMove[],
+    selected?: boolean
 }
 
 export class EcoLoader{
@@ -19,6 +20,7 @@ export class EcoLoader{
     public async initialize(){
         this.idToNodeMap = await this.createIdToNodeMap();
         this.rootNodes = await this.createRootNodes(this.idToNodeMap);
+        this.rootNodes[0].selected = true;
     }
 
     private async createIdToNodeMap() {
