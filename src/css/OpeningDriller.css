@@ -14,6 +14,7 @@
 
 /*magically used  by chessground through its naming*/
 .cg-wrap {
+    user-select: none;
     width: 70vmin;
     height: 70vmin;
     min-width: 70vmin;
