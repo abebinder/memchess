@@ -3,13 +3,13 @@ import {Button} from "@material-ui/core";
 import '../css/ControlPanel.css'
 
 export interface ControlPanelProps {
-    switchColorsCallback: any,
-    toggleArrowsCallback: any
+    switchColorsCallback: () => void,
+    toggleArrowsCallback: () => void
 }
 
 export class ControlPanel extends React.Component<ControlPanelProps> {
 
-    render() {
+    render(): JSX.Element {
 
         return (
             <div className={"controlPanel"}>

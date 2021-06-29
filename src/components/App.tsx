@@ -6,7 +6,7 @@ import OpeningDriller from "./OpeningDriller";
 
 export class App extends React.Component {
 
-    render() {
+    render(): JSX.Element {
 
         return (
             <div>

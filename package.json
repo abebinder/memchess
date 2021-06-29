@@ -34,10 +34,40 @@
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+      "ecmaVersion": 2018,
+      "sourceType": "module"
+    },
+    "plugins": [
+      "@typescript-eslint",
+      "react-hooks",
+      "only-warn"
+    ],
     "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
+      "plugin:react/recommended",
+      "plugin:@typescript-eslint/recommended"
+    ],
+    "rules": {
+      "react-hooks/rules-of-hooks": "warn",
+      "react-hooks/exhaustive-deps": "warn",
+      "react/prop-types": "off",
+      "@typescript-eslint/ban-types": [
+        "error",
+        {
+          "extendDefaults": true,
+          "types": {
+            "{}": false
+          }
+        }
+      ]
+    },
+    "settings": {
+      "react": {
+        "pragma": "React",
+        "version": "detect"
+      }
+    }
   },
   "browserslist": {
     "production": [
@@ -53,7 +83,13 @@
   },
   "devDependencies": {
     "@types/chess.js": "^0.10.1",
-    "eslint-config-react-app": "^6.0.0"
+    "@typescript-eslint/eslint-plugin": "^4.28.1",
+    "@typescript-eslint/parser": "^4.28.1",
+    "eslint": "^7.29.0",
+    "eslint-config-react-app": "^6.0.0",
+    "eslint-plugin-only-warn": "^1.0.2",
+    "eslint-plugin-react": "^7.24.0",
+    "eslint-plugin-react-hooks": "^4.2.0"
   },
   "resolutions": {
     "babel-jest": "^26.6.0"

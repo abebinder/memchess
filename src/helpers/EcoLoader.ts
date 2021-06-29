@@ -16,17 +16,17 @@ export class EcoLoader{
     rootNodes: OpeningNode[] = []
 
 
-    public async initialize(){
+    public async initialize():Promise<void>{
         this.rootNodes = await this.createRootNodes();
         this.rootNodes[0].selected = true;
     }
 
     private async createRootNodes() {
-        let openingStringToNodeMap = new Map<string, OpeningNode>();
-        let rootNodes: OpeningNode[] = []
-        let openingList = await this.createOpeningList();
+        const openingStringToNodeMap = new Map<string, OpeningNode>();
+        const rootNodes: OpeningNode[] = []
+        const openingList = await this.createOpeningList();
         for (const node of openingList) {
-            var isDuplicateName = false;
+            let isDuplicateName = false;
             for (let i = node.moves.length-1; i>-1; i--) {
                 if(i==0) { rootNodes.push(node) }
                 const possibleParent = openingStringToNodeMap.get(this.stringify(node.moves.slice(0, i)))
@@ -42,9 +42,9 @@ export class EcoLoader{
 
 
     createShortMoves(data: DSVRowString): ShortMove[] {
-        var movesAsSpaceSeperatedString = data["moves"] as string;
-        var moves = movesAsSpaceSeperatedString.split(" ")
-        let arr: ShortMove [] = [];
+        const movesAsSpaceSeperatedString = data["moves"] as string;
+        const moves = movesAsSpaceSeperatedString.split(" ")
+        const arr: ShortMove [] = [];
         for (const elem of moves) {
             const shortMove = {from: elem.substring(0, 2) as Square, to: elem.slice(-2) as Square}
             arr.push(shortMove);
@@ -55,7 +55,7 @@ export class EcoLoader{
 
 
     private async createOpeningList() {
-        let openingList: OpeningNode[] = []
+        const openingList: OpeningNode[] = []
         for (const prefix of this.prefixes) {
             const data = await d3.tsv(`https://raw.githubusercontent.com/niklasf/eco/master/${prefix}.tsv`);
             for (const elem of data) {
@@ -73,7 +73,7 @@ export class EcoLoader{
         })
     }
 
-    stringify(arr: ShortMove[]){
+    stringify(arr: ShortMove[]): string {
         let unraveled = ""
         for (const shortMove of arr) {
             unraveled = unraveled + shortMove.from + shortMove.to
@@ -81,7 +81,7 @@ export class EcoLoader{
         return unraveled
     }
 
-    sortNodeList(arr: OpeningNode[]){
+    sortNodeList(arr: OpeningNode[]): OpeningNode[] {
         arr.sort((a, b) => {
             return a.text.localeCompare(b.text)
         })

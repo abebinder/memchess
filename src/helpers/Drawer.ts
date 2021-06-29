@@ -1,9 +1,20 @@
 import {OpeningDrillerState} from "../components/OpeningDriller";
+import {ShortMove} from "chess.js";
 
+export interface Drawable {
+    enabled: boolean,
+    autoShapes: Arrow[]
+}
 
-export function drawArrow(input: OpeningDrillerState)  {
+export interface Arrow {
+    orig: ShortMove,
+    dest: ShortMove,
+    brush: string
+}
 
-    var arrow = []
+export function drawArrow(input: OpeningDrillerState): Drawable  {
+
+    let arrow = []
 
     if (input.game.history().length < input.moves.length && input.shouldDraw) {
         arrow = [

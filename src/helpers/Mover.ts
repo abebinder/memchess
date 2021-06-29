@@ -3,7 +3,7 @@ import {ChessInstance, ShortMove, Square} from "chess.js"
 export interface MoveInput {
     move: ShortMove | undefined,
     game: ChessInstance,
-    callback: any,
+    callback: (game:ChessInstance) => void,
     expectedSourceSquare?: Square,
     expectedTargetSquare?: Square,
 }

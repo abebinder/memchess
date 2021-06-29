@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import Chessground from "react-chessground"
 import "react-chessground/dist/styles/chessground.css"
 import * as ChessJS from "chess.js"
-import {ChessInstance, ShortMove} from "chess.js"
+import {ChessInstance, ShortMove, Square} from "chess.js"
 import {EcoLoader} from "../helpers/EcoLoader";
 import * as Mover from "../helpers/Mover"
 import '../css/OpeningDriller.css'
@@ -33,18 +33,18 @@ export class OpeningDriller extends Component<{}, OpeningDrillerState> {
     };
 
 
-    componentDidMount() {
+    componentDidMount() : void {
         this.ecoLoader.initialize().then(() => {
             this.setState({loading: false, moves: this.ecoLoader.rootNodes[0].moves},
                 () => this.computerMove(true))
         });
     }
 
-    onDrop = (sourceSquare, targetSquare) => {
+    onDrop = (sourceSquare : Square, targetSquare : Square) : void => {
         const playermove = Mover.move({
             move: this.state.moves[this.state.game.history().length],
             game: this.state.game,
-            callback: (game) => {this.setState({game: game});},
+            callback: (game: ChessInstance) => {this.setState({game: game});},
             expectedSourceSquare: sourceSquare,
             expectedTargetSquare: targetSquare
         })
@@ -52,7 +52,7 @@ export class OpeningDriller extends Component<{}, OpeningDrillerState> {
         this.computerMove(false)
     };
 
-    computerMove(firstmove: boolean){
+    computerMove(firstmove: boolean) : void {
         //needed to draw first arrow when switching from black to white
         if(firstmove) { this.forceUpdate() }
 
@@ -66,15 +66,15 @@ export class OpeningDriller extends Component<{}, OpeningDrillerState> {
         if(!firstmove) { this.resetIfEnd() }
     }
 
-    switchColor = () => {
-        var newOrientation = "white";
+    switchColor = () : void => {
+        let newOrientation = "white";
         if (this.state.orientation === "white") {
             newOrientation = "black"
         }
         this.setState({orientation: newOrientation, game: new Chess()}, () => this.computerMove(true));
     }
 
-    resetIfEnd() {
+    resetIfEnd() : boolean {
         if (this.state.game.history().length < this.state.moves.length) {
             return false;
         }
@@ -84,7 +84,7 @@ export class OpeningDriller extends Component<{}, OpeningDrillerState> {
         return true;
     }
 
-    changeMoves = (moves) => {
+    changeMoves = (moves: ShortMove[]) : void => {
         this.setState({
             moves : moves,
             game: new Chess()
@@ -92,7 +92,7 @@ export class OpeningDriller extends Component<{}, OpeningDrillerState> {
     }
 
 
-    render() {
+    render(): JSX.Element {
         if (this.state.loading) return <h2>Loading...</h2>;
         return (
             <div className='sideBySide'>
