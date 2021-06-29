@@ -3,13 +3,13 @@ import {ChessInstance, ShortMove, Square} from "chess.js"
 export interface MoveInput {
     move: ShortMove | undefined,
     game: ChessInstance,
-    callback: (game:ChessInstance) => void,
+    callback: (game: ChessInstance) => void,
     expectedSourceSquare?: Square,
     expectedTargetSquare?: Square,
 }
 
 export function move(input: MoveInput): boolean {
-    if (!validateInput(input)){
+    if (!validateInput(input)) {
         input.callback(input.game)
         return false
     }

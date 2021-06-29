@@ -33,14 +33,14 @@ export class OpeningDriller extends Component<{}, OpeningDrillerState> {
     };
 
 
-    componentDidMount() : void {
+    componentDidMount(): void {
         this.ecoLoader.initialize().then(() => {
             this.setState({loading: false, moves: this.ecoLoader.rootNodes[0].moves},
                 () => this.computerMove(true))
         });
     }
 
-    onDrop = (sourceSquare : Square, targetSquare : Square) : void => {
+    onDrop = (sourceSquare: Square, targetSquare: Square): void => {
         const playermove = Mover.move({
             move: this.state.moves[this.state.game.history().length],
             game: this.state.game,
@@ -52,21 +52,21 @@ export class OpeningDriller extends Component<{}, OpeningDrillerState> {
         this.computerMove(false)
     };
 
-    computerMove(firstmove: boolean) : void {
+    computerMove(firstmove: boolean): void {
         //needed to draw first arrow when switching from black to white
-        if(firstmove) { this.forceUpdate() }
+        if (firstmove) { this.forceUpdate() }
 
-        if(!firstmove || this.state.orientation === "black") {
+        if (!firstmove || this.state.orientation === "black") {
             Mover.move({
                 move: this.state.moves[this.state.game.history().length],
                 game: this.state.game,
                 callback: (game) => {this.setState({game: game})}
             })
         }
-        if(!firstmove) { this.resetIfEnd() }
+        if (!firstmove) { this.resetIfEnd() }
     }
 
-    switchColor = () : void => {
+    switchColor = (): void => {
         let newOrientation = "white";
         if (this.state.orientation === "white") {
             newOrientation = "black"
@@ -74,7 +74,7 @@ export class OpeningDriller extends Component<{}, OpeningDrillerState> {
         this.setState({orientation: newOrientation, game: new Chess()}, () => this.computerMove(true));
     }
 
-    resetIfEnd() : boolean {
+    resetIfEnd(): boolean {
         if (this.state.game.history().length < this.state.moves.length) {
             return false;
         }
@@ -84,9 +84,9 @@ export class OpeningDriller extends Component<{}, OpeningDrillerState> {
         return true;
     }
 
-    changeMoves = (moves: ShortMove[]) : void => {
+    changeMoves = (moves: ShortMove[]): void => {
         this.setState({
-            moves : moves,
+            moves: moves,
             game: new Chess()
         }, () => this.computerMove(true));
     }
@@ -100,7 +100,7 @@ export class OpeningDriller extends Component<{}, OpeningDrillerState> {
                     fen={this.state.game.fen()}
                     onMove={this.onDrop}
                     orientation={this.state.orientation}
-                    drawable={ drawArrow(this.state) }
+                    drawable={drawArrow(this.state)}
                 />
                 <OpeningTree
                     onClickCallback={this.changeMoves}

@@ -13,7 +13,7 @@ export interface OpeningTreeProps {
 export class OpeningTree extends React.Component<OpeningTreeProps> {
 
 
-    localClickCallback = (e: {component: TreeView}): void => {
+    localClickCallback = (e: { component: TreeView }): void => {
         if (e.component.getSelectedNodes().length > 0) {
             this.props.onClickCallback(e.component.getSelectedNodes()[0].itemData.moves)
         }

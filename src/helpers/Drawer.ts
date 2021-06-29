@@ -12,7 +12,7 @@ export interface Arrow {
     brush: string
 }
 
-export function drawArrow(input: OpeningDrillerState): Drawable  {
+export function drawArrow(input: OpeningDrillerState): Drawable {
 
     let arrow = []
 
@@ -28,7 +28,7 @@ export function drawArrow(input: OpeningDrillerState): Drawable  {
 
     return {
         enabled: false,
-        autoShapes:arrow
+        autoShapes: arrow
     }
 
 }

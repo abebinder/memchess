@@ -2,7 +2,7 @@ import {ShortMove, Square} from "chess.js";
 import * as d3 from "d3";
 import {DSVRowString} from "d3";
 
-export interface OpeningNode{
+export interface OpeningNode {
     items: OpeningNode[],
     id: string,
     text: string,
@@ -10,13 +10,13 @@ export interface OpeningNode{
     selected?: boolean
 }
 
-export class EcoLoader{
+export class EcoLoader {
 
     prefixes: string[] = ['a', 'b', 'c', 'd', 'e']
     rootNodes: OpeningNode[] = []
 
 
-    public async initialize():Promise<void>{
+    public async initialize(): Promise<void> {
         this.rootNodes = await this.createRootNodes();
         this.rootNodes[0].selected = true;
     }
@@ -27,10 +27,10 @@ export class EcoLoader{
         const openingList = await this.createOpeningList();
         for (const node of openingList) {
             let isDuplicateName = false;
-            for (let i = node.moves.length-1; i>-1; i--) {
-                if(i==0) { rootNodes.push(node) }
+            for (let i = node.moves.length - 1; i > -1; i--) {
+                if (i == 0) { rootNodes.push(node) }
                 const possibleParent = openingStringToNodeMap.get(this.stringify(node.moves.slice(0, i)))
-                if(possibleParent){
+                if (possibleParent) {
                     possibleParent.text === node.text ? isDuplicateName = true : possibleParent.items.push(node)
                     break;
                 }
@@ -51,7 +51,6 @@ export class EcoLoader{
         }
         return arr;
     }
-
 
 
     private async createOpeningList() {
@@ -86,7 +85,7 @@ export class EcoLoader{
             return a.text.localeCompare(b.text)
         })
         for (const openingNode of arr) {
-            if(openingNode.items) this.sortNodeList(openingNode.items)
+            if (openingNode.items) this.sortNodeList(openingNode.items)
         }
         return arr;
     }
