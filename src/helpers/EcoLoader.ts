@@ -13,29 +13,19 @@ export interface OpeningNode{
 export class EcoLoader{
 
     prefixes: string[] = ['a', 'b', 'c', 'd', 'e']
-    idToNodeMap: Map<string, OpeningNode> = new Map<string, OpeningNode>()
     rootNodes: OpeningNode[] = []
 
 
     public async initialize(){
-        this.idToNodeMap = await this.createIdToNodeMap();
-        this.rootNodes = await this.createRootNodes(this.idToNodeMap);
+        this.rootNodes = await this.createRootNodes();
         this.rootNodes[0].selected = true;
     }
 
-    private async createIdToNodeMap() {
-        let idToNodeMap = new Map<string, OpeningNode>();
-        let openingList = await this.createOpeningList();
-        for (const opening of openingList) {
-            idToNodeMap.set(opening.id, opening)
-        }
-        return idToNodeMap
-    }
-
-    private async createRootNodes(idToNodeMap: Map<string, OpeningNode>) {
+    private async createRootNodes() {
         let openingStringToNodeMap = new Map<string, OpeningNode>();
         let rootNodes: OpeningNode[] = []
-        for (const node of idToNodeMap.values()) {
+        let openingList = await this.createOpeningList();
+        for (const node of openingList) {
             var isDuplicateName = false;
             for (let i = node.moves.length-1; i>-1; i--) {
                 if(i==0) { rootNodes.push(node) }
