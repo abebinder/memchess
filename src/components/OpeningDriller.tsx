@@ -20,7 +20,7 @@ export interface OpeningDrillerState {
     shouldDraw: boolean
 }
 
-class OpeningDriller extends Component<{}, OpeningDrillerState> {
+export class OpeningDriller extends Component<{}, OpeningDrillerState> {
 
     ecoLoader: EcoLoader = new EcoLoader();
 
