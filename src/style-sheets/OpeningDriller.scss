@@ -1,0 +1,31 @@
+.sideBySide {
+    display: flex;
+    margin: 5vh auto;
+    flex-direction: row;
+    position: relative;
+    height: 80vh;
+    flex-grow: 1;
+    width: 80vw;
+        background-color: linen;
+    max-height: 90%;
+    gap: 5vw;
+}
+
+/*magically used  by chessground through its naming*/
+.cg-wrap {
+    user-select: none;
+    width: 80vmin;
+    height: 80vmin;
+    min-width: 80vmin;
+    min-height: 80vmin;
+    position: relative;
+    display: block;
+    margin-top: auto;
+    margin-bottom: auto;
+    color:  black !important;
+    background-color: black;
+}
+
+.cg-custom-svgs {
+    height: 0% !important;
+}

@@ -1,5 +1,5 @@
 import React from 'react';
-import '../css/OpeningTree.css'
+import '../style-sheets/OpeningTree.scss'
 import TreeViewComponent from 'devextreme-react/tree-view';
 import TreeView from "devextreme/ui/tree_view";
 import {EcoLoader} from "../helpers/EcoLoader";

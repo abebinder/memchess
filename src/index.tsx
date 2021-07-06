@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './css/index.css';
+import './style-sheets/index.scss';
 import themes from 'devextreme/ui/themes';
 import {App} from "./components/App";
 

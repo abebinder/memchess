@@ -5,7 +5,7 @@ import * as ChessJS from "chess.js"
 import {ChessInstance, ShortMove, Square} from "chess.js"
 import {EcoLoader} from "../helpers/EcoLoader";
 import * as Mover from "../helpers/Mover"
-import '../css/OpeningDriller.css'
+import '../style-sheets/OpeningDriller.scss'
 import {OpeningTree} from "./OpeningTree";
 import {drawArrow} from "../helpers/Drawer";
 import {ControlPanel} from "./ControlPanel";
@@ -96,15 +96,15 @@ export class OpeningDriller extends Component<{}, OpeningDrillerState> {
         if (this.state.loading) return <h2>Loading...</h2>;
         return (
             <div className='sideBySide'>
+                <OpeningTree
+                    onClickCallback={this.changeMoves}
+                    ecoLoader={this.ecoLoader}
+                />
                 <Chessground
                     fen={this.state.game.fen()}
                     onMove={this.onDrop}
                     orientation={this.state.orientation}
                     drawable={drawArrow(this.state)}
-                />
-                <OpeningTree
-                    onClickCallback={this.changeMoves}
-                    ecoLoader={this.ecoLoader}
                 />
                 <ControlPanel
                     switchColorsCallback={this.switchColor}
