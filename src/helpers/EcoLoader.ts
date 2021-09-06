@@ -42,7 +42,7 @@ export class EcoLoader {
 
 
     createShortMoves(data: DSVRowString): ShortMove[] {
-        const movesAsSpaceSeperatedString = data["moves"] as string;
+        const movesAsSpaceSeperatedString = data["uci"] as string;
         const moves = movesAsSpaceSeperatedString.split(" ")
         const arr: ShortMove [] = [];
         for (const elem of moves) {
@@ -56,7 +56,7 @@ export class EcoLoader {
     private async createOpeningList() {
         const openingList: OpeningNode[] = []
         for (const prefix of this.prefixes) {
-            const data = await d3.tsv(`https://raw.githubusercontent.com/niklasf/eco/6cf42579ec2b279ae741ac88a4ea4e817ed69263/${prefix}.tsv`);
+            const data = await d3.tsv(`https://raw.githubusercontent.com/niklasf/chess-openings/master/dist/${prefix}.tsv`);
             for (const elem of data) {
                 const moves = this.createShortMoves(elem)
                 openingList.push({
