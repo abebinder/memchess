@@ -56,7 +56,7 @@ export class EcoLoader {
     private async createOpeningList() {
         const openingList: OpeningNode[] = []
         for (const prefix of this.prefixes) {
-            const data = await d3.tsv(`https://raw.githubusercontent.com/niklasf/eco/master/${prefix}.tsv`);
+            const data = await d3.tsv(`https://raw.githubusercontent.com/niklasf/eco/6cf42579ec2b279ae741ac88a4ea4e817ed69263/${prefix}.tsv`);
             for (const elem of data) {
                 const moves = this.createShortMoves(elem)
                 openingList.push({
