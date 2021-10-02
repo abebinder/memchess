@@ -1,4 +1,5 @@
-# [memchess.org](https://memchess.org)
+# Live Site
+Site is live at [memchess.org](https://memchess.org)
 
 # About
 To learn chess openings by repetition. Inspired by the original memchess.com which unfortunately disappeared in 2019. Created with [react](https://github.com/facebook/create-react-app). Deployed on [aws amplify](https://aws.amazon.com/amplify/).
