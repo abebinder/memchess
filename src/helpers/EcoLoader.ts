@@ -91,3 +91,5 @@ export class EcoLoader {
     }
 
 }
+
+console.log("hello")
