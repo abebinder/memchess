@@ -3,12 +3,14 @@ import Chessground from "react-chessground"
 import "react-chessground/dist/styles/chessground.css"
 import * as ChessJS from "chess.js"
 import {ChessInstance, ShortMove, Square} from "chess.js"
-import {EcoLoader} from "../helpers/EcoLoader";
 import * as Mover from "../helpers/Mover"
 import '../style-sheets/OpeningDriller.scss'
 import {OpeningTree} from "./OpeningTree";
 import {drawArrow} from "../helpers/Drawer";
 import {ControlPanel} from "./ControlPanel";
+import Openings from "../data/openings.json";
+import {OpeningNode} from "../data/OpeningNode";
+
 
 const Chess = typeof ChessJS === "function" ? ChessJS : ChessJS.Chess;
 
@@ -22,7 +24,7 @@ export interface OpeningDrillerState {
 
 export class OpeningDriller extends Component<{}, OpeningDrillerState> {
 
-    ecoLoader: EcoLoader = new EcoLoader();
+    openings: OpeningNode[] = Openings as OpeningNode[]
 
     state = {
         orientation: "white",
@@ -34,10 +36,8 @@ export class OpeningDriller extends Component<{}, OpeningDrillerState> {
 
 
     componentDidMount(): void {
-        this.ecoLoader.initialize().then(() => {
-            this.setState({loading: false, moves: this.ecoLoader.rootNodes[0].moves},
-                () => this.computerMove(true))
-        });
+        this.setState({loading: false, moves: this.openings[0].moves},
+            () => this.computerMove(true))
     }
 
     onDrop = (sourceSquare: Square, targetSquare: Square): void => {
@@ -98,7 +98,7 @@ export class OpeningDriller extends Component<{}, OpeningDrillerState> {
             <div className='sideBySide'>
                 <OpeningTree
                     onClickCallback={this.changeMoves}
-                    ecoLoader={this.ecoLoader}
+                    openings={this.openings}
                 />
                 <Chessground
                     fen={this.state.game.fen()}

@@ -3,18 +3,12 @@ import fetch from 'node-fetch'
 import * as d3 from "d3";
 import {DSVRowString} from "d3";
 import * as fs from 'fs';
+import {OpeningNode} from "../src/data/OpeningNode";
 
+//dirty hack to use d3 from node environment
 // @ts-ignore
 globalThis.fetch = fetch
 
-
-export interface OpeningNode {
-    items: OpeningNode[],
-    id: string,
-    text: string,
-    moves: ShortMove[],
-    selected?: boolean
-}
 
 export class EcoLoader {
 
@@ -105,7 +99,7 @@ a.initialize().then(()=>{
     console.log(a.rootNodes)
     //let nodes = JSON.stringify(a.rootNodes, null, 2)
     let nodes = JSON.stringify(a.rootNodes)
-    fs.writeFile('./myjsonfile.json', nodes, 'utf8', ()=>{
+    fs.writeFile('src/data/openings.json', nodes, 'utf8', ()=>{
         console.log("written")
     })
 })

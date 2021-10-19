@@ -35,7 +35,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "loge": "node --loader ts-node/esm src/helpers/EcoLoader.ts"
+    "loge": "node --loader ts-node/esm bin/EcoLoader.ts"
   },
   "eslintConfig": {
     "parser": "@typescript-eslint/parser",
