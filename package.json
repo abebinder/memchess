@@ -35,7 +35,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "loge": "node --loader ts-node/esm bin/OpeningLoader.ts"
+    "pull-openings": "node --loader ts-node/esm bin/OpeningPuller.ts"
   },
   "eslintConfig": {
     "parser": "@typescript-eslint/parser",
