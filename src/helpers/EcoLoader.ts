@@ -1,6 +1,12 @@
 import {ShortMove, Square} from "chess.js";
+import fetch from 'node-fetch'
 import * as d3 from "d3";
 import {DSVRowString} from "d3";
+import * as fs from 'fs';
+
+// @ts-ignore
+globalThis.fetch = fetch
+
 
 export interface OpeningNode {
     items: OpeningNode[],
@@ -92,4 +98,15 @@ export class EcoLoader {
 
 }
 
-console.log("hello")
+console.log("working")
+let a = new EcoLoader();
+a.initialize().then(()=>{
+    console.log("done initializing")
+    console.log(a.rootNodes)
+    //let nodes = JSON.stringify(a.rootNodes, null, 2)
+    let nodes = JSON.stringify(a.rootNodes)
+    fs.writeFile('./myjsonfile.json', nodes, 'utf8', ()=>{
+        console.log("written")
+    })
+})
+console.log("finished")
