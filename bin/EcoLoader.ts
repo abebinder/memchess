@@ -10,97 +10,83 @@ import {OpeningNode} from "../src/data/OpeningNode";
 globalThis.fetch = fetch
 
 
-export class EcoLoader {
-
-    prefixes: string[] = ['a', 'b', 'c', 'd', 'e']
-    rootNodes: OpeningNode[] = []
-
-
-    public async initialize(): Promise<void> {
-        this.rootNodes = await this.createRootNodes();
-        this.rootNodes[0].selected = true;
-    }
-
-    private async createRootNodes() {
-        const openingStringToNodeMap = new Map<string, OpeningNode>();
-        const rootNodes: OpeningNode[] = []
-        const openingList = await this.createOpeningList();
-        for (const node of openingList) {
-            let isDuplicateName = false;
-            for (let i = node.moves.length - 1; i > -1; i--) {
-                if (i == 0) { rootNodes.push(node) }
-                const possibleParent = openingStringToNodeMap.get(this.stringify(node.moves.slice(0, i)))
-                if (possibleParent) {
-                    possibleParent.text === node.text ? isDuplicateName = true : possibleParent.items.push(node)
-                    break;
-                }
-            }
-            if (!isDuplicateName) { openingStringToNodeMap.set(this.stringify(node.moves), node) }
-        }
-        return this.sortNodeList(rootNodes)
-    }
-
-
-    createShortMoves(data: DSVRowString): ShortMove[] {
-        const movesAsSpaceSeperatedString = data["uci"] as string;
-        const moves = movesAsSpaceSeperatedString.split(" ")
-        const arr: ShortMove [] = [];
-        for (const elem of moves) {
-            const shortMove = {from: elem.substring(0, 2) as Square, to: elem.slice(-2) as Square}
-            arr.push(shortMove);
-        }
-        return arr;
-    }
-
-
-    private async createOpeningList() {
-        const openingList: OpeningNode[] = []
-        for (const prefix of this.prefixes) {
-            const data = await d3.tsv(`https://raw.githubusercontent.com/niklasf/chess-openings/master/dist/${prefix}.tsv`);
-            for (const elem of data) {
-                const moves = this.createShortMoves(elem)
-                openingList.push({
-                    text: elem["name"],
-                    items: [],
-                    id: this.stringify(moves),
-                    moves: moves
-                })
-            }
-        }
-        return openingList.sort((a, b) => {
-            return a.moves.length - b.moves.length || a.text.localeCompare(b.text)
+function writeOpeningsToFile(): void {
+    createRootNodes().then((nodes) => {
+        let nodesAsString = JSON.stringify(nodes)
+        fs.writeFile('src/data/openings.json', nodesAsString, 'utf8', () => {
         })
-    }
-
-    stringify(arr: ShortMove[]): string {
-        let unraveled = ""
-        for (const shortMove of arr) {
-            unraveled = unraveled + shortMove.from + shortMove.to
-        }
-        return unraveled
-    }
-
-    sortNodeList(arr: OpeningNode[]): OpeningNode[] {
-        arr.sort((a, b) => {
-            return a.text.localeCompare(b.text)
-        })
-        for (const openingNode of arr) {
-            if (openingNode.items) this.sortNodeList(openingNode.items)
-        }
-        return arr;
-    }
-
+    })
 }
 
-console.log("working")
-let a = new EcoLoader();
-a.initialize().then(()=>{
-    console.log("done initializing")
-    console.log(a.rootNodes)
-    //let nodes = JSON.stringify(a.rootNodes, null, 2)
-    let nodes = JSON.stringify(a.rootNodes)
-    fs.writeFile('src/data/openings.json', nodes, 'utf8', ()=>{
-        console.log("written")
+
+async function createRootNodes() {
+    const openingStringToNodeMap = new Map<string, OpeningNode>();
+    const rootNodes: OpeningNode[] = []
+    const openingList = await createOpeningList();
+    for (const node of openingList) {
+        let isDuplicateName = false;
+        for (let i = node.moves.length - 1; i > -1; i--) {
+            if (i == 0) rootNodes.push(node)
+            const possibleParent = openingStringToNodeMap.get(stringify(node.moves.slice(0, i)))
+            if (possibleParent) {
+                possibleParent.text === node.text ? isDuplicateName = true : possibleParent.items.push(node)
+                break;
+            }
+        }
+        if (!isDuplicateName) openingStringToNodeMap.set(stringify(node.moves), node)
+    }
+    return sortNodeList(rootNodes)
+}
+
+
+function createShortMoves(data: DSVRowString): ShortMove[] {
+    const movesAsSpaceSeperatedString = data["uci"] as string;
+    const moves = movesAsSpaceSeperatedString.split(" ")
+    const arr: ShortMove [] = [];
+    for (const elem of moves) {
+        const shortMove = {from: elem.substring(0, 2) as Square, to: elem.slice(-2) as Square}
+        arr.push(shortMove);
+    }
+    return arr;
+}
+
+
+async function createOpeningList() {
+    const openingList: OpeningNode[] = []
+    for (const prefix of ['a', 'b', 'c', 'd', 'e']) {
+        const data = await d3.tsv(`https://raw.githubusercontent.com/niklasf/chess-openings/master/dist/${prefix}.tsv`);
+        for (const elem of data) {
+            const moves = createShortMoves(elem)
+            openingList.push({
+                text: elem["name"],
+                items: [],
+                id: stringify(moves),
+                moves: moves
+            })
+        }
+    }
+    return openingList.sort((a, b) => {
+        return a.moves.length - b.moves.length || a.text.localeCompare(b.text)
     })
-})
-console.log("finished")
+}
+
+function stringify(arr: ShortMove[]): string {
+    let unraveled = ""
+    for (const shortMove of arr) {
+        unraveled = unraveled + shortMove.from + shortMove.to
+    }
+    return unraveled
+}
+
+function sortNodeList(arr: OpeningNode[]): OpeningNode[] {
+    arr.sort((a, b) => {
+        return a.text.localeCompare(b.text)
+    })
+    for (const openingNode of arr) {
+        if (openingNode.items) sortNodeList(openingNode.items)
+    }
+    return arr;
+}
+
+
+writeOpeningsToFile()
