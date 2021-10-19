@@ -36,6 +36,7 @@ export class OpeningDriller extends Component<{}, OpeningDrillerState> {
 
 
     componentDidMount(): void {
+        this.openings[0].selected = true;
         this.setState({loading: false, moves: this.openings[0].moves},
             () => this.computerMove(true))
     }
