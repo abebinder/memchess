@@ -3,7 +3,7 @@ import fetch from 'node-fetch'
 import * as d3 from "d3";
 import {DSVRowString} from "d3";
 import * as fs from 'fs';
-import {OpeningNode} from "../src/data/OpeningNode";
+import {OpeningNode} from "../data/OpeningNode";
 
 //dirty hack to use d3 from node environment
 // @ts-ignore
