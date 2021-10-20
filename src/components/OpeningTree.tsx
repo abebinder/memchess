@@ -2,12 +2,12 @@ import React from 'react';
 import '../style-sheets/OpeningTree.scss'
 import TreeViewComponent from 'devextreme-react/tree-view';
 import TreeView from "devextreme/ui/tree_view";
-import {EcoLoader} from "../helpers/EcoLoader";
 import {ShortMove} from "chess.js";
+import {OpeningNode} from "../data/OpeningNode";
 
 export interface OpeningTreeProps {
     onClickCallback: (moves: ShortMove[]) => void,
-    ecoLoader: EcoLoader
+    openings: OpeningNode[]
 }
 
 export class OpeningTree extends React.Component<OpeningTreeProps> {
@@ -25,7 +25,7 @@ export class OpeningTree extends React.Component<OpeningTreeProps> {
             <TreeViewComponent
                 className={"tree"}
                 id="treeview"
-                items={this.props.ecoLoader.rootNodes}
+                items={this.props.openings}
                 onSelectionChanged={this.localClickCallback}
                 selectByClick={true}
                 selectionMode='single'
