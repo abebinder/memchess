@@ -32,3 +32,5 @@ If youre developing on windows, there might be a problem with finding the instal
 [niklasf](https://github.com/niklasf) who created [eco repository of openings](https://github.com/niklasf/eco)
 
 [favicon](https://thenounproject.com/term/chess-knight/108491/) by [Dima Lagunov](https://thenounproject.com/lagunov.dmitriy)
+
+#Testing amplify autobuild prs!
