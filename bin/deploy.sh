@@ -7,3 +7,7 @@ while [[ "$(aws amplify get-job --app-id $1 --branch-name $2 --job-id $JOB_ID | 
 JOB_STATUS="$(aws amplify get-job --app-id $1 --branch-name $2 --job-id $JOB_ID | jq -r '.job.summary.status')"
 echo "Job finished"
 echo "Job status is $JOB_STATUS"
+if [ "$JOB_STATUS" != "SUCCEED" ]; then
+    echo "Deployment did not succeed"
+    exit 1
+fi
