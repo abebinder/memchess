@@ -11,4 +11,4 @@ jobs:
       steps:
       - uses: actions/checkout@v2
       - name: Deploy
-        run: ./bin/deploy.sh memory-chess workflows
+        run: ./bin/deploy.sh d1ua63wbaoggz5 workflows
