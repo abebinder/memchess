@@ -2,7 +2,7 @@ name: Deploy
 on: 
     push:
         branches:
-        - workflows
+        - main
 jobs:
     deploy:
       runs-on: ubuntu-latest
@@ -15,4 +15,4 @@ jobs:
       steps:
       - uses: actions/checkout@v2
       - name: Deploy
-        run: ./bin/deploy.sh d1ua63wbaoggz5 workflows
+        run: ./bin/deploy.sh d1ua63wbaoggz5 main
