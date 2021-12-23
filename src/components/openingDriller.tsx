@@ -10,12 +10,13 @@ import {drawArrow} from "../helpers/drawer";
 import {ControlPanel} from "./controlPanel";
 import Openings from "../data/openings.json";
 import {Opening} from "../data/opening";
+import {Orientation} from "../data/orientation";
 
 
 const Chess = typeof ChessJS === "function" ? ChessJS : ChessJS.Chess;
 
 export interface OpeningDrillerState {
-    orientation: string,
+    orientation: Orientation,
     game: ChessInstance,
     moves: ShortMove[],
     shouldDraw: boolean
@@ -26,7 +27,7 @@ export class OpeningDriller extends Component<{}, OpeningDrillerState> {
     openings: Opening[] = Openings as Opening[]
 
     state = {
-        orientation: "white",
+        orientation: Orientation.White,
         game: new Chess(),
         moves: [],
         shouldDraw: true
@@ -66,9 +67,9 @@ export class OpeningDriller extends Component<{}, OpeningDrillerState> {
     }
 
     switchColor = (): void => {
-        let newOrientation = "white";
-        if (this.state.orientation === "white") {
-            newOrientation = "black"
+        let newOrientation = Orientation.White;
+        if (this.state.orientation === Orientation.White) {
+            newOrientation = Orientation.Black
         }
         this.setState({orientation: newOrientation, game: new Chess()}, () => this.computerMove(true));
     }
