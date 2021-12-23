@@ -1,5 +1,5 @@
 import React from 'react';
-import '../style-sheets/ControlPanel.scss'
+import '../style-sheets/controlPanel.scss'
 import {Helmet} from 'react-helmet'
 
 export class About extends React.Component {

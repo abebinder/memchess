@@ -3,7 +3,7 @@ import fetch from 'node-fetch'
 import * as d3 from "d3";
 import {DSVRowString} from "d3";
 import * as fs from 'fs';
-import {OpeningNode} from "../data/OpeningNode";
+import {Opening} from "../data/opening";
 
 //dirty hack to use d3 from node environment
 // @ts-ignore
@@ -12,18 +12,16 @@ globalThis.fetch = fetch
 
 function writeOpeningsToFile(): void {
     createRootNodes().then((nodes) => {
-        let nodesAsString = JSON.stringify(nodes)
-        fs.writeFile('src/data/openings.json', nodesAsString, 'utf8', () => {
-        })
+        const nodesAsString = JSON.stringify(nodes)
+        fs.writeFile('src/data/openings.json', nodesAsString, 'utf8', () => undefined)
     })
 }
 
 
 async function createRootNodes() {
-    const openingStringToNodeMap = new Map<string, OpeningNode>();
-    const rootNodes: OpeningNode[] = []
-    const openingList = await createOpeningList();
-    for (const node of openingList) {
+    const openingStringToNodeMap = new Map<string, Opening>();
+    const rootNodes: Opening[] = []
+    for (const node of await createOpeningList()) {
         let isDuplicateName = false;
         for (let i = node.moves.length - 1; i > -1; i--) {
             if (i == 0) rootNodes.push(node)
@@ -52,7 +50,7 @@ function createShortMoves(data: DSVRowString): ShortMove[] {
 
 
 async function createOpeningList() {
-    const openingList: OpeningNode[] = []
+    const openingList: Opening[] = []
     for (const prefix of ['a', 'b', 'c', 'd', 'e']) {
         const data = await d3.tsv(`https://raw.githubusercontent.com/niklasf/chess-openings/master/dist/${prefix}.tsv`);
         for (const elem of data) {
@@ -78,7 +76,7 @@ function stringify(arr: ShortMove[]): string {
     return unraveled
 }
 
-function sortNodeList(arr: OpeningNode[]): OpeningNode[] {
+function sortNodeList(arr: Opening[]): Opening[] {
     arr.sort((a, b) => {
         return a.text.localeCompare(b.text)
     })

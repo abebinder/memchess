@@ -3,32 +3,31 @@ import Chessground from "react-chessground"
 import "react-chessground/dist/styles/chessground.css"
 import * as ChessJS from "chess.js"
 import {ChessInstance, ShortMove, Square} from "chess.js"
-import * as Mover from "../helpers/Mover"
-import '../style-sheets/OpeningDriller.scss'
-import {OpeningTree} from "./OpeningTree";
-import {drawArrow} from "../helpers/Drawer";
-import {ControlPanel} from "./ControlPanel";
+import * as Mover from "../helpers/mover"
+import '../style-sheets/openingTrainer.scss'
+import {OpeningTree} from "./openingTree";
+import {drawArrow} from "../helpers/drawer";
+import {ControlPanel} from "./controlPanel";
 import Openings from "../data/openings.json";
-import {OpeningNode} from "../data/OpeningNode";
+import {Opening} from "../data/opening";
+import {Orientation} from "../data/orientation";
 
 
 const Chess = typeof ChessJS === "function" ? ChessJS : ChessJS.Chess;
 
-export interface OpeningDrillerState {
-    orientation: string,
-    loading: boolean,
+export interface OpeningTrainerState {
+    orientation: Orientation,
     game: ChessInstance,
     moves: ShortMove[],
     shouldDraw: boolean
 }
 
-export class OpeningDriller extends Component<{}, OpeningDrillerState> {
+export class OpeningTrainer extends Component<{}, OpeningTrainerState> {
 
-    openings: OpeningNode[] = Openings as OpeningNode[]
+    openings: Opening[] = Openings as Opening[]
 
     state = {
-        orientation: "white",
-        loading: true,
+        orientation: Orientation.White,
         game: new Chess(),
         moves: [],
         shouldDraw: true
@@ -37,7 +36,7 @@ export class OpeningDriller extends Component<{}, OpeningDrillerState> {
 
     componentDidMount(): void {
         this.openings[0].selected = true;
-        this.setState({loading: false, moves: this.openings[0].moves},
+        this.setState({ moves: this.openings[0].moves},
             () => this.computerMove(true))
     }
 
@@ -53,24 +52,24 @@ export class OpeningDriller extends Component<{}, OpeningDrillerState> {
         this.computerMove(false)
     };
 
-    computerMove(firstmove: boolean): void {
+    computerMove(firstMove: boolean): void {
         //needed to draw first arrow when switching from black to white
-        if (firstmove) { this.forceUpdate() }
+        if (firstMove) { this.forceUpdate() }
 
-        if (!firstmove || this.state.orientation === "black") {
+        if (!firstMove || this.state.orientation === Orientation.Black) {
             Mover.move({
                 move: this.state.moves[this.state.game.history().length],
                 game: this.state.game,
                 callback: (game) => {this.setState({game: game})}
             })
         }
-        if (!firstmove) { this.resetIfEnd() }
+        if (!firstMove) { this.resetIfEnd() }
     }
 
     switchColor = (): void => {
-        let newOrientation = "white";
-        if (this.state.orientation === "white") {
-            newOrientation = "black"
+        let newOrientation = Orientation.White;
+        if (this.state.orientation === Orientation.White) {
+            newOrientation = Orientation.Black
         }
         this.setState({orientation: newOrientation, game: new Chess()}, () => this.computerMove(true));
     }
@@ -94,7 +93,6 @@ export class OpeningDriller extends Component<{}, OpeningDrillerState> {
 
 
     render(): JSX.Element {
-        if (this.state.loading) return <h2>Loading...</h2>;
         return (
             <div className='sideBySide'>
                 <OpeningTree
@@ -116,4 +114,4 @@ export class OpeningDriller extends Component<{}, OpeningDrillerState> {
     }
 }
 
-export default OpeningDriller
+export default OpeningTrainer
