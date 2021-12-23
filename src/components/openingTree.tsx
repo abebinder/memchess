@@ -1,13 +1,13 @@
 import React from 'react';
-import '../style-sheets/OpeningTree.scss'
+import '../style-sheets/openingTree.scss'
 import TreeViewComponent from 'devextreme-react/tree-view';
 import TreeView from "devextreme/ui/tree_view";
 import {ShortMove} from "chess.js";
-import {OpeningNode} from "../data/OpeningNode";
+import {Opening} from "../data/opening";
 
 export interface OpeningTreeProps {
     onClickCallback: (moves: ShortMove[]) => void,
-    openings: OpeningNode[]
+    openings: Opening[]
 }
 
 export class OpeningTree extends React.Component<OpeningTreeProps> {

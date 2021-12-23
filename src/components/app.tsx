@@ -1,12 +1,12 @@
 import React from 'react';
-import '../style-sheets/ControlPanel.scss'
+import '../style-sheets/controlPanel.scss'
 import {Helmet} from 'react-helmet'
-import OpeningDriller from "./OpeningDriller";
+import OpeningDriller from "./openingDriller";
 import {BrowserRouter, Route, Switch} from "react-router-dom";
-import {About} from "./About";
-import {Header} from "./Header";
+import {About} from "./about";
+import {NavBar} from "./navBar";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import '../style-sheets/App.scss'
+import '../style-sheets/app.scss'
 
 
 export class App extends React.Component {
@@ -24,7 +24,7 @@ export class App extends React.Component {
                             Based on jay's memchess.com which disappeared in 2019."
                         />
                     </Helmet>
-                    <Header/>
+                    <NavBar/>
                     <Switch>
                         <Route exact path="/" component={OpeningDriller} />
                         <Route exact path="/about" component={About} />

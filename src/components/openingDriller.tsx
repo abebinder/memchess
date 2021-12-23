@@ -3,13 +3,13 @@ import Chessground from "react-chessground"
 import "react-chessground/dist/styles/chessground.css"
 import * as ChessJS from "chess.js"
 import {ChessInstance, ShortMove, Square} from "chess.js"
-import * as Mover from "../helpers/Mover"
-import '../style-sheets/OpeningDriller.scss'
-import {OpeningTree} from "./OpeningTree";
-import {drawArrow} from "../helpers/Drawer";
-import {ControlPanel} from "./ControlPanel";
+import * as Mover from "../helpers/mover"
+import '../style-sheets/openingDriller.scss'
+import {OpeningTree} from "./openingTree";
+import {drawArrow} from "../helpers/drawer";
+import {ControlPanel} from "./controlPanel";
 import Openings from "../data/openings.json";
-import {OpeningNode} from "../data/OpeningNode";
+import {Opening} from "../data/opening";
 
 
 const Chess = typeof ChessJS === "function" ? ChessJS : ChessJS.Chess;
@@ -24,7 +24,7 @@ export interface OpeningDrillerState {
 
 export class OpeningDriller extends Component<{}, OpeningDrillerState> {
 
-    openings: OpeningNode[] = Openings as OpeningNode[]
+    openings: Opening[] = Openings as Opening[]
 
     state = {
         orientation: "white",

@@ -1,6 +1,6 @@
 import React from 'react';
 import {Button} from 'react-bootstrap';
-import '../style-sheets/ControlPanel.scss'
+import '../style-sheets/controlPanel.scss'
 
 export interface ControlPanelProps {
     switchColorsCallback: () => void,

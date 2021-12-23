@@ -1,7 +1,7 @@
 import React from "react";
 import {Nav, Navbar} from "react-bootstrap";
 
-export class Header extends React.Component {
+export class NavBar extends React.Component {
 
 
 

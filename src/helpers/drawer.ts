@@ -1,4 +1,4 @@
-import {OpeningDrillerState} from "../components/OpeningDriller";
+import {OpeningDrillerState} from "../components/openingDriller";
 import {ShortMove} from "chess.js";
 
 export interface Drawable {
