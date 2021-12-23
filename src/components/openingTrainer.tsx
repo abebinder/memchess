@@ -56,7 +56,7 @@ export class OpeningTrainer extends Component<{}, OpeningTrainerState> {
         //needed to draw first arrow when switching from black to white
         if (firstMove) { this.forceUpdate() }
 
-        if (!firstMove || this.state.orientation === "black") {
+        if (!firstMove || this.state.orientation === Orientation.Black) {
             Mover.move({
                 move: this.state.moves[this.state.game.history().length],
                 game: this.state.game,
