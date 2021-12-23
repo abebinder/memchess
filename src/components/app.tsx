@@ -1,7 +1,7 @@
 import React from 'react';
 import '../style-sheets/controlPanel.scss'
 import {Helmet} from 'react-helmet'
-import OpeningDriller from "./openingDriller";
+import OpeningTrainer from "./openingTrainer";
 import {BrowserRouter, Route, Switch} from "react-router-dom";
 import {About} from "./about";
 import {NavBar} from "./navBar";
@@ -26,7 +26,7 @@ export class App extends React.Component {
                     </Helmet>
                     <NavBar/>
                     <Switch>
-                        <Route exact path="/" component={OpeningDriller} />
+                        <Route exact path="/" component={OpeningTrainer} />
                         <Route exact path="/about" component={About} />
                     </Switch>
                 </BrowserRouter>

@@ -15,14 +15,14 @@ import {Orientation} from "../data/orientation";
 
 const Chess = typeof ChessJS === "function" ? ChessJS : ChessJS.Chess;
 
-export interface OpeningDrillerState {
+export interface OpeningTrainerState {
     orientation: Orientation,
     game: ChessInstance,
     moves: ShortMove[],
     shouldDraw: boolean
 }
 
-export class OpeningDriller extends Component<{}, OpeningDrillerState> {
+export class OpeningTrainer extends Component<{}, OpeningTrainerState> {
 
     openings: Opening[] = Openings as Opening[]
 
@@ -114,4 +114,4 @@ export class OpeningDriller extends Component<{}, OpeningDrillerState> {
     }
 }
 
-export default OpeningDriller
+export default OpeningTrainer

@@ -1,4 +1,4 @@
-import {OpeningDrillerState} from "../components/openingDriller";
+import {OpeningTrainerState} from "../components/openingTrainer";
 import {ShortMove} from "chess.js";
 
 export interface Drawable {
@@ -12,7 +12,7 @@ export interface Arrow {
     brush: string
 }
 
-export function drawArrow(input: OpeningDrillerState): Drawable {
+export function drawArrow(input: OpeningTrainerState): Drawable {
 
     let arrow = []
 
