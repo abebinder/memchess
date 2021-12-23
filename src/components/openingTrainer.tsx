@@ -52,18 +52,18 @@ export class OpeningTrainer extends Component<{}, OpeningTrainerState> {
         this.computerMove(false)
     };
 
-    computerMove(firstmove: boolean): void {
+    computerMove(firstMove: boolean): void {
         //needed to draw first arrow when switching from black to white
-        if (firstmove) { this.forceUpdate() }
+        if (firstMove) { this.forceUpdate() }
 
-        if (!firstmove || this.state.orientation === "black") {
+        if (!firstMove || this.state.orientation === "black") {
             Mover.move({
                 move: this.state.moves[this.state.game.history().length],
                 game: this.state.game,
                 callback: (game) => {this.setState({game: game})}
             })
         }
-        if (!firstmove) { this.resetIfEnd() }
+        if (!firstMove) { this.resetIfEnd() }
     }
 
     switchColor = (): void => {
