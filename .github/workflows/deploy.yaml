@@ -15,4 +15,4 @@ jobs:
       steps:
       - uses: actions/checkout@v2
       - name: Deploy
-        run: ./.github/workflows/scripts/deploy.sh d1ua63wbaoggz5 main
+        run: ./.github/scripts/deploy.sh d1ua63wbaoggz5 main
