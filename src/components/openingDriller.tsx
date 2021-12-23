@@ -16,7 +16,6 @@ const Chess = typeof ChessJS === "function" ? ChessJS : ChessJS.Chess;
 
 export interface OpeningDrillerState {
     orientation: string,
-    loading: boolean,
     game: ChessInstance,
     moves: ShortMove[],
     shouldDraw: boolean
@@ -28,7 +27,6 @@ export class OpeningDriller extends Component<{}, OpeningDrillerState> {
 
     state = {
         orientation: "white",
-        loading: true,
         game: new Chess(),
         moves: [],
         shouldDraw: true
@@ -37,7 +35,7 @@ export class OpeningDriller extends Component<{}, OpeningDrillerState> {
 
     componentDidMount(): void {
         this.openings[0].selected = true;
-        this.setState({loading: false, moves: this.openings[0].moves},
+        this.setState({ moves: this.openings[0].moves},
             () => this.computerMove(true))
     }
 
@@ -94,7 +92,6 @@ export class OpeningDriller extends Component<{}, OpeningDrillerState> {
 
 
     render(): JSX.Element {
-        if (this.state.loading) return <h2>Loading...</h2>;
         return (
             <div className='sideBySide'>
                 <OpeningTree
