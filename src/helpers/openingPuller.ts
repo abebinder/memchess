@@ -21,8 +21,7 @@ function writeOpeningsToFile(): void {
 async function createRootNodes() {
     const openingStringToNodeMap = new Map<string, Opening>();
     const rootNodes: Opening[] = []
-    const openingList = await createOpeningList();
-    for (const node of openingList) {
+    for (const node of await createOpeningList()) {
         let isDuplicateName = false;
         for (let i = node.moves.length - 1; i > -1; i--) {
             if (i == 0) rootNodes.push(node)
