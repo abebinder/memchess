@@ -7,6 +7,7 @@ import {About} from "./about";
 import {NavBar} from "./navBar";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../style-sheets/app.scss'
+import 'devextreme/dist/css/dx.light.css';
 
 
 export class App extends React.Component {
