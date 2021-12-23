@@ -4,7 +4,7 @@ import "react-chessground/dist/styles/chessground.css"
 import * as ChessJS from "chess.js"
 import {ChessInstance, ShortMove, Square} from "chess.js"
 import * as Mover from "../helpers/mover"
-import '../style-sheets/openingDriller.scss'
+import '../style-sheets/openingTrainer.scss'
 import {OpeningTree} from "./openingTree";
 import {drawArrow} from "../helpers/drawer";
 import {ControlPanel} from "./controlPanel";
