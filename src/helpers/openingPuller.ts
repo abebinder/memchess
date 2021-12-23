@@ -12,9 +12,8 @@ globalThis.fetch = fetch
 
 function writeOpeningsToFile(): void {
     createRootNodes().then((nodes) => {
-        let nodesAsString = JSON.stringify(nodes)
-        fs.writeFile('src/data/openings.json', nodesAsString, 'utf8', () => {
-        })
+        const nodesAsString = JSON.stringify(nodes)
+        fs.writeFile('src/data/openings.json', nodesAsString, 'utf8', () => undefined)
     })
 }
 
